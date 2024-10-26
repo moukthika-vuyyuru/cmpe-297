@@ -1,4 +1,5 @@
 /* src/styles/MenteeList.module.css */
+
 .menteeListContainer {
     margin: 20px;
 }
@@ -11,26 +12,31 @@
     border: 1px solid #ccc;
 }
 
-.menteeItem {
+.menteeList {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #f9f9f9;
-    /* Light background for contrast */
-    border: 1px solid #ddd;
-    /* Light border */
-    border-radius: 10px;
+    flex-wrap: wrap;
+    /* Allow cards to wrap */
+    justify-content: center;
+    /* Center the cards */
+}
+
+.menteeItem {
+    background-color: #ffffff;
+    /* Card background */
+    border-radius: 12px;
     /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Shadow for depth */
     padding: 15px;
-    /* Spacing inside the box */
-    margin-bottom: 15px;
-    /* Space between mentee items */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    /* Slight shadow for depth */
-    cursor: pointer;
-    /* Pointer cursor for interactive elements */
+    /* Internal padding */
+    margin: 10px;
+    /* Margin between cards */
+    width: 250px;
+    /* Fixed width for cards */
     transition: transform 0.2s;
     /* Smooth scaling effect */
+    cursor: pointer;
+    /* Pointer cursor for interactive elements */
 }
 
 .menteeItem:hover {
@@ -40,38 +46,46 @@
 
 .menteeDetails {
     display: flex;
+    /* Flexbox for layout */
     align-items: center;
+    /* Center vertically */
 }
 
 .menteeImage {
-    width: 50px;
-    /* Fixed width for the image */
-    height: 50px;
-    /* Fixed height for the image */
+    width: 60px;
+    /* Increased size */
+    height: 60px;
+    /* Increased size */
     border-radius: 50%;
-    /* Make the image round */
-    margin-right: 10px;
+    /* Circular image */
+    margin-right: 15px;
     /* Space between image and name */
 }
 
 .menteeName {
+    font-size: 18px;
+    /* Adjust font size */
     font-weight: bold;
-    /* Bold text for the name */
+    /* Bold text */
+    color: #333;
+    /* Text color */
 }
 
 .chatButton {
     background-color: #007bff;
-    /* Bootstrap primary color */
+    /* Primary button color */
     color: white;
+    /* White text */
     border: none;
+    /* No border */
     border-radius: 5px;
     /* Rounded corners */
     padding: 8px 12px;
-    /* Padding inside the button */
+    /* Padding */
     cursor: pointer;
-    /* Pointer cursor for button */
+    /* Pointer cursor */
     transition: background-color 0.3s;
-    /* Smooth background transition */
+    /* Smooth transition */
 }
 
 .chatButton:hover {

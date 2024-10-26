@@ -102,10 +102,6 @@ const Chat: React.FC = () => {
           Send
         </button>
       </div>
-      <div>
-        <p>SenderId: {senderId}</p>
-        <p>ReceiverId: {recipientId || "Not available"}</p>
-      </div>
     </div>
   );
 };

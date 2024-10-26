@@ -12,12 +12,14 @@ interface Follow {
 }
 
 const MentorDashboard: React.FC = () => {
-  const { userId } = useUserContext(); // Get userId from context
-  const [activeTab, setActiveTab] = useState<"home" | "profile">("home");
+  const { userId } = useUserContext();
+  const [activeTab, setActiveTab] = useState<
+    "mentees" | "requests" | "profile"
+  >("mentees");
   const [followRequests, setFollowRequests] = useState<FollowRequest[]>([]);
-  const [follows, setFollows] = useState<Follow[]>([]); // Track followed mentees
+  const [follows, setFollows] = useState<Follow[]>([]);
 
-  // Fetch follow requests for the mentor
+  // Fetch follow requests
   useEffect(() => {
     fetch(
       `http://localhost:5001/followRequests?mentorId=${userId}&status=pending`
@@ -27,7 +29,7 @@ const MentorDashboard: React.FC = () => {
       .catch((err) => console.error("Failed to load follow requests", err));
   }, [userId]);
 
-  // Fetch existing follows (persisted mentees) from the backend
+  // Fetch followed mentees
   useEffect(() => {
     fetch(`http://localhost:5001/follows?mentorId=${userId}`)
       .then((res) => res.json())
@@ -45,22 +47,18 @@ const MentorDashboard: React.FC = () => {
         if (res.ok) {
           alert("Request accepted!");
 
-          // Update the local state for requests
-          setFollowRequests(
-            (prev) => prev.filter((req) => req.id !== requestId) // Remove the accepted request
+          setFollowRequests((prev) =>
+            prev.filter((req) => req.id !== requestId)
           );
 
-          // Prepare the new follow object
           const newFollow = { menteeId, mentorId: userId ?? "" };
-
-          // Update the follows in state and backend
           setFollows((prev) => [...prev, newFollow]);
 
-          fetch(`http://localhost:5001/follows`, {
+          return fetch(`http://localhost:5001/follows`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newFollow),
-          }).catch((err) => console.error("Failed to update follows", err));
+          });
         } else {
           throw new Error("Failed to accept the request");
         }
@@ -75,8 +73,6 @@ const MentorDashboard: React.FC = () => {
       .then((res) => {
         if (res.ok) {
           alert("Request rejected!");
-
-          // Remove the rejected request from state
           setFollowRequests((prev) =>
             prev.filter((req) => req.id !== requestId)
           );
@@ -89,20 +85,19 @@ const MentorDashboard: React.FC = () => {
 
   return (
     <div className={styles.dashboardContainer}>
-      {/* Requests Section */}
-      <MentorRequests
-        followRequests={followRequests}
-        onAccept={handleAccept}
-        onReject={handleReject}
-      />
-
-      {/* Tabs for Home and Profile */}
+      {/* Tab Navigation */}
       <div className={styles.tabs}>
         <button
-          className={activeTab === "home" ? styles.activeTab : ""}
-          onClick={() => setActiveTab("home")}
+          className={activeTab === "mentees" ? styles.activeTab : ""}
+          onClick={() => setActiveTab("mentees")}
         >
-          Home
+          Your Mentees
+        </button>
+        <button
+          className={activeTab === "requests" ? styles.activeTab : ""}
+          onClick={() => setActiveTab("requests")}
+        >
+          Follow Requests
         </button>
         <button
           className={activeTab === "profile" ? styles.activeTab : ""}
@@ -114,11 +109,15 @@ const MentorDashboard: React.FC = () => {
 
       {/* Tab Content */}
       <div className={styles.tabContent}>
-        {activeTab === "home" ? (
-          <MenteeList follows={follows} />
-        ) : (
-          <MentorProfile />
+        {activeTab === "mentees" && <MenteeList follows={follows} />}
+        {activeTab === "requests" && (
+          <MentorRequests
+            followRequests={followRequests}
+            onAccept={handleAccept}
+            onReject={handleReject}
+          />
         )}
+        {activeTab === "profile" && <MentorProfile />}
       </div>
     </div>
   );

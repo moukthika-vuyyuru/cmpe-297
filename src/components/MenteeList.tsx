@@ -1,13 +1,13 @@
 // src/components/MenteeList.tsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import MenteeCard from "./MenteeCard";
-import "../styles/MenteeList.module.css";
+import "../styles/MenteeList.module.css"; // Adjust the path as needed
+import defaultAvatar from "../assets/default-avatar.jpeg";
 
 interface Mentee {
   id: string;
   name: string;
-  image: string;
+  image?: string;
 }
 
 interface MenteeListProps {
@@ -65,11 +65,23 @@ const MenteeList: React.FC<MenteeListProps> = ({ follows }) => {
       ) : menteesToShow.length > 0 ? (
         <div className="menteeList">
           {menteesToShow.map((mentee) => (
-            <MenteeCard
+            <div
+              className="menteeItem"
               key={mentee.id}
-              mentee={mentee}
-              onChatOpen={handleChatOpen}
-            />
+              onClick={() => handleChatOpen(mentee.id)}
+            >
+              <div className="menteeDetails">
+                <img
+                  src={mentee.image || defaultAvatar} // Use default image if mentee image is not available
+                  alt={`${mentee.name}'s profile`}
+                  className="menteeImage"
+                />
+                <div>
+                  <div className="menteeName">{mentee.name}</div>
+                  <button className="chatButton">Chat</button>
+                </div>
+              </div>
+            </div>
           ))}
         </div>
       ) : (

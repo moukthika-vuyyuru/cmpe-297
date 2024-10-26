@@ -1,15 +1,17 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useUserContext } from "./UserContext";
 import { useNavigate } from "react-router-dom";
-import styles from "../styles/MenteeDashboard.module.css"; // Ensure to use CSS modules
+import styles from "../styles/MenteeDashboard.module.css";
 import { FollowRequest } from "../types";
-import defaultAvatar from "../assets/default-avatar.jpeg"; // Default avatar import
+import defaultAvatar from "../assets/default-avatar.jpeg";
+import { FaMapMarkerAlt } from "react-icons/fa";
 
 interface Mentor {
   id: string;
   name: string;
   specialty: string;
   image: string;
+  location: string; // Add location property
 }
 
 const MenteeDashboard: React.FC = () => {
@@ -18,27 +20,43 @@ const MenteeDashboard: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [pendingRequests, setPendingRequests] = useState<FollowRequest[]>([]);
   const [followedMentors, setFollowedMentors] = useState<Mentor[]>([]);
+  const [activeTab, setActiveTab] = useState<
+    "yourMentors" | "pendingRequests" | "searchForMentors"
+  >("yourMentors");
   const navigate = useNavigate();
-  const mentorListRef = useRef<HTMLDivElement>(null); // Ref for mentor list
 
   // Fetch mentors from the backend
   useEffect(() => {
-    fetch(`http://localhost:5001/mentors`)
-      .then((res) => res.json())
-      .then((data) => setMentors(data))
-      .catch((err) => console.error("Failed to load mentors", err));
+    const fetchMentors = async () => {
+      try {
+        const res = await fetch(`http://localhost:5001/mentors`);
+        const data = await res.json();
+        setMentors(data);
+      } catch (err) {
+        console.error("Failed to load mentors", err);
+      }
+    };
+
+    fetchMentors();
   }, []);
 
   // Fetch pending follow requests for the mentee
   useEffect(() => {
-    if (!menteeId) return;
+    const fetchPendingRequests = async () => {
+      if (!menteeId) return;
 
-    fetch(`http://localhost:5001/followRequests?menteeId=${menteeId}`)
-      .then((res) => res.json())
-      .then((data: FollowRequest[]) => {
+      try {
+        const res = await fetch(
+          `http://localhost:5001/followRequests?menteeId=${menteeId}`
+        );
+        const data: FollowRequest[] = await res.json();
         setPendingRequests(data);
-      })
-      .catch((err) => console.error("Failed to load follow requests", err));
+      } catch (err) {
+        console.error("Failed to load follow requests", err);
+      }
+    };
+
+    fetchPendingRequests();
   }, [menteeId]);
 
   // Filter followed mentors based on accepted requests
@@ -59,22 +77,28 @@ const MenteeDashboard: React.FC = () => {
     const message = prompt("Enter a message for the mentor:");
     if (!message) return;
 
-    fetch(`http://localhost:5001/followRequests`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        menteeId,
-        mentorId,
-        status: "pending",
-        message,
-      }),
-    })
-      .then((res) => res.json())
-      .then((newRequest: FollowRequest) => {
+    const sendFollowRequest = async () => {
+      try {
+        const res = await fetch(`http://localhost:5001/followRequests`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            menteeId,
+            mentorId,
+            status: "pending",
+            message,
+          }),
+        });
+
+        const newRequest: FollowRequest = await res.json();
         alert("Follow request sent!");
         setPendingRequests((prev) => [...prev, newRequest]);
-      })
-      .catch((err) => console.error("Failed to send follow request", err));
+      } catch (err) {
+        console.error("Failed to send follow request", err);
+      }
+    };
+
+    sendFollowRequest();
   };
 
   // Filter mentors that haven't been requested yet
@@ -88,102 +112,140 @@ const MenteeDashboard: React.FC = () => {
     navigate("/all-mentors"); // Navigate to all mentors page
   };
 
-  // Scroll to the right
-  const scrollRight = () => {
-    if (mentorListRef.current) {
-      mentorListRef.current.scrollBy({ left: 300, behavior: "smooth" });
-    }
-  };
-
-  // Scroll to the left
-  const scrollLeft = () => {
-    if (mentorListRef.current) {
-      mentorListRef.current.scrollBy({ left: -300, behavior: "smooth" });
-    }
-  };
-
   return (
     <div className={styles.menteeDashboardContainer}>
-      <h2>Your Mentors</h2>
-      <div className={styles.mentorCarousel}>
-        <button className={styles.arrowButton} onClick={scrollLeft}>
-          &lt;
+      <h2>Mentee Dashboard</h2>
+      <div className={styles.tabs}>
+        <button
+          className={activeTab === "yourMentors" ? styles.activeTab : ""}
+          onClick={() => setActiveTab("yourMentors")}
+        >
+          Your Mentors
         </button>
-        <div className={styles.mentorList} ref={mentorListRef}>
-          {followedMentors.length > 0 ? (
-            followedMentors.map((mentor) => (
-              <div key={mentor.id} className={styles.mentorItem}>
-                <img src={mentor.image || defaultAvatar} alt={mentor.name} />
-                <div>
-                  <h3>{mentor.name}</h3>
-                  <p>{mentor.specialty}</p>
-                  <button onClick={() => navigate(`/chat/${mentor.id}`)}>
-                    Message
-                  </button>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p>You are not following any mentors yet.</p>
-          )}
-        </div>
-        <button className={styles.arrowButton} onClick={scrollRight}>
-          &gt;
+        <button
+          className={activeTab === "pendingRequests" ? styles.activeTab : ""}
+          onClick={() => setActiveTab("pendingRequests")}
+        >
+          Pending Requests
+        </button>
+        <button
+          className={activeTab === "searchForMentors" ? styles.activeTab : ""}
+          onClick={() => setActiveTab("searchForMentors")}
+        >
+          Search for Mentors
         </button>
       </div>
 
-      <button className={styles.viewAll} onClick={handleViewAll}>
-        View All Mentors
-      </button>
-
-      <h2>Pending Requests</h2>
-      <div className={styles.mentorList}>
-        {pendingRequests.filter((request) => request.status === "pending")
-          .length > 0 ? (
-          pendingRequests
-            .filter((request) => request.status === "pending")
-            .map((request) => {
-              const mentor = mentors.find(
-                (mentor) => mentor.id === request.mentorId
-              );
-              return (
-                mentor && (
-                  <div key={request.id} className={styles.mentorItem}>
-                    <p>Request to {mentor.name} is pending.</p>
+      <div className={styles.tabContent}>
+        {activeTab === "yourMentors" && (
+          <>
+            <h3>Your Mentors</h3>
+            <div className={styles.mentorList}>
+              {followedMentors.length > 0 ? (
+                followedMentors.map((mentor) => (
+                  <div key={mentor.id} className={styles.mentorCard}>
+                    <img
+                      src={mentor.image || defaultAvatar}
+                      alt={mentor.name}
+                      className={styles.mentorImage}
+                    />
+                    <div className={styles.mentorDetails}>
+                      <h3>{mentor.name}</h3>
+                      <p>{mentor.specialty}</p>
+                      <div className={styles.mentorLocation}>
+                        <FaMapMarkerAlt />
+                        <span>{mentor.location}</span>
+                      </div>
+                      <button
+                        className={styles.messageButton}
+                        onClick={() => navigate(`/chat/${mentor.id}`)}
+                      >
+                        Message
+                      </button>
+                    </div>
                   </div>
-                )
-              );
-            })
-        ) : (
-          <p>No pending follow requests.</p>
-        )}
-      </div>
-
-      <h2>Search for Mentors</h2>
-      <input
-        type="text"
-        placeholder="Search by name or specialty"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
-
-      <div className={styles.mentorList}>
-        {availableMentors
-          .filter(
-            (mentor) =>
-              mentor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              mentor.specialty.toLowerCase().includes(searchTerm.toLowerCase())
-          )
-          .map((mentor) => (
-            <div key={mentor.id} className={styles.mentorItem}>
-              <img src={mentor.image || defaultAvatar} alt={mentor.name} />
-              <div>
-                <h3>{mentor.name}</h3>
-                <p>{mentor.specialty}</p>
-                <button onClick={() => handleFollow(mentor.id)}>Follow</button>
-              </div>
+                ))
+              ) : (
+                <p>You are not following any mentors yet.</p>
+              )}
             </div>
-          ))}
+          </>
+        )}
+
+        {activeTab === "pendingRequests" && (
+          <>
+            <h3>Pending Requests</h3>
+            <div className={styles.mentorList}>
+              {pendingRequests.filter((request) => request.status === "pending")
+                .length > 0 ? (
+                pendingRequests
+                  .filter((request) => request.status === "pending")
+                  .map((request) => {
+                    const mentor = mentors.find(
+                      (mentor) => mentor.id === request.mentorId
+                    );
+                    return (
+                      mentor && (
+                        <div key={request.id} className={styles.mentorCard}>
+                          <p>Request to {mentor.name} is pending.</p>
+                        </div>
+                      )
+                    );
+                  })
+              ) : (
+                <p>No pending follow requests.</p>
+              )}
+            </div>
+          </>
+        )}
+
+        {activeTab === "searchForMentors" && (
+          <>
+            <h3>Search for Mentors</h3>
+            <input
+              type="text"
+              placeholder="Search by name or specialty"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className={styles.searchInput}
+            />
+            <div className={styles.mentorList}>
+              {availableMentors
+                .filter(
+                  (mentor) =>
+                    mentor.name
+                      .toLowerCase()
+                      .includes(searchTerm.toLowerCase()) ||
+                    mentor.specialty
+                      .toLowerCase()
+                      .includes(searchTerm.toLowerCase())
+                )
+                .map((mentor) => (
+                  <div key={mentor.id} className={styles.mentorCard}>
+                    <img
+                      src={mentor.image || defaultAvatar}
+                      alt={mentor.name}
+                      className={styles.mentorImage}
+                    />
+                    <div className={styles.mentorDetails}>
+                      <h3>{mentor.name}</h3>
+                      <p>{mentor.specialty}</p>
+                      <div className={styles.mentorLocation}>
+                        <FaMapMarkerAlt />
+                        <span>{mentor.location}</span>
+                      </div>
+                      <button
+                        className={styles.followButton}
+                        onClick={() => handleFollow(mentor.id)}
+                      >
+                        Follow
+                      </button>
+                    </div>
+                  </div>
+                ))}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
