@@ -1,0 +1,13 @@
+/* src/components/MentorList.module.css */
+.mentorList {
+    display: flex;
+    /* Use flexbox for horizontal layout */
+    justify-content: center;
+    /* Center the items */
+    gap: 1rem;
+    /* Space between items */
+    margin-top: 2rem;
+    /* Top margin */
+    flex-wrap: wrap;
+    /* Allows items to wrap to the next line if there's not enough space */
+}

@@ -1,0 +1,79 @@
+/* src/components/MenteeDashboard.module.css */
+.menteeDashboardContainer {
+    padding: 20px;
+}
+
+.mentorCarousel {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.mentorList {
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+    margin-top: 20px;
+    padding: 10px 0;
+    scroll-behavior: smooth;
+    /* For smooth scrolling */
+}
+
+.mentorItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    width: 150px;
+    background-color: #f9f9f9;
+    /* Background color for the mentor item */
+}
+
+.mentorItem img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+}
+
+.mentorItem button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.mentorItem button:hover {
+    background-color: #0056b3;
+}
+
+.arrow {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    margin: 0 10px;
+}
+
+.arrow:hover {
+    background-color: #0056b3;
+}
+
+.arrow.left {
+    position: absolute;
+    left: 0;
+    z-index: 1;
+}
+
+.arrow.right {
+    position: absolute;
+    right: 0;
+    z-index: 1;
+}

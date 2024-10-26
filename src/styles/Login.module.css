@@ -1,0 +1,72 @@
+.loginContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Center the form */
+  justify-content: center;
+  /* Center vertically */
+  height: 100vh;
+  /* Full viewport height */
+  background-color: #f9f9f9;
+  /* Light background for contrast */
+}
+
+.title {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+  /* Dark color for title */
+}
+
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  /* Full width for the form */
+  max-width: 400px;
+  /* Set a max-width */
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+.inputField {
+  margin-bottom: 15px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+
+.inputField:focus {
+  border-color: #007bff;
+  /* Highlight border on focus */
+  outline: none;
+  /* Remove default outline */
+}
+
+.submitButton {
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: rgb(231, 204, 204);
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submitButton:hover {
+  background-color: #0056b3;
+  /* Darker blue on hover */
+}
+
+/* Optional: add a class for error messages */
+.errorMessage {
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
+}

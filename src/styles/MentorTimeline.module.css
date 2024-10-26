@@ -1,0 +1,39 @@
+.timeline {
+    margin-top: 20px;
+}
+
+.request {
+    padding: 15px;
+    margin: 10px 0;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.request h3 {
+    margin: 0;
+    font-size: 1.2em;
+}
+
+.request button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.request button:hover {
+    background-color: #218838;
+}
+
+.request .reject-button {
+    background-color: #dc3545;
+}
+
+.request .reject-button:hover {
+    background-color: #c82333;
+}

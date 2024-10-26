@@ -1,0 +1,80 @@
+/* src/styles/MenteeList.module.css */
+.menteeListContainer {
+    margin: 20px;
+}
+
+.searchInput {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.menteeItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f9f9f9;
+    /* Light background for contrast */
+    border: 1px solid #ddd;
+    /* Light border */
+    border-radius: 10px;
+    /* Rounded corners */
+    padding: 15px;
+    /* Spacing inside the box */
+    margin-bottom: 15px;
+    /* Space between mentee items */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* Slight shadow for depth */
+    cursor: pointer;
+    /* Pointer cursor for interactive elements */
+    transition: transform 0.2s;
+    /* Smooth scaling effect */
+}
+
+.menteeItem:hover {
+    transform: scale(1.02);
+    /* Slightly scale up on hover */
+}
+
+.menteeDetails {
+    display: flex;
+    align-items: center;
+}
+
+.menteeImage {
+    width: 50px;
+    /* Fixed width for the image */
+    height: 50px;
+    /* Fixed height for the image */
+    border-radius: 50%;
+    /* Make the image round */
+    margin-right: 10px;
+    /* Space between image and name */
+}
+
+.menteeName {
+    font-weight: bold;
+    /* Bold text for the name */
+}
+
+.chatButton {
+    background-color: #007bff;
+    /* Bootstrap primary color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    /* Rounded corners */
+    padding: 8px 12px;
+    /* Padding inside the button */
+    cursor: pointer;
+    /* Pointer cursor for button */
+    transition: background-color 0.3s;
+    /* Smooth background transition */
+}
+
+.chatButton:hover {
+    background-color: #0056b3;
+    /* Darker shade on hover */
+}
