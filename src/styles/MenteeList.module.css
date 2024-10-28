@@ -1,61 +1,48 @@
 /* src/styles/MenteeList.module.css */
-
-.menteeListContainer {
-    margin: 20px;
-}
-
-.searchInput {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 20px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-}
-
-.menteeList {
+.menteesContainer {
     display: flex;
     flex-direction: column;
-    /* Stack mentees vertically */
+    gap: 10px;
+    /* Space between cards */
+    padding: 10px;
+    max-width: 300px;
+    /* Adjust width as needed */
 }
 
-.menteeItem {
+.menteeCard {
     display: flex;
     align-items: center;
-    /* Center items vertically */
-    background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 10px;
-    /* Adjust padding for a compact view */
-    margin: 5px 0;
-    /* Margin between items */
+    border: 1px solid #ddd;
+    /* Light border for card */
+    border-radius: 8px;
+    /* Rounded corners */
+    background-color: #f9f9f9;
+    /* Background color */
     cursor: pointer;
-    transition: background-color 0.2s;
-    /* Smooth background transition */
-    max-width: 200px;
-    /* Reduced width */
+    /* Pointer on hover */
+    transition: box-shadow 0.3s;
+    /* Animation */
 }
 
-.menteeItem:hover {
-    background-color: #f0f0f0;
-    /* Light grey on hover */
+.menteeCard:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* Shadow on hover */
 }
 
-.menteeImage {
+.menteeProfilePicture {
     width: 40px;
-    /* Smaller image */
+    /* Profile picture size */
     height: 40px;
-    /* Smaller image */
     border-radius: 50%;
-    /* Circular image */
+    /* Circular profile picture */
     margin-right: 10px;
-    /* Space between image and name */
+    /* Space between picture and name */
 }
 
 .menteeName {
-    font-size: 16px;
-    /* Adjust font size as needed */
     font-weight: bold;
+    /* Bold name */
     color: #333;
-    /* Text color */
+    /* Darker text color */
 }

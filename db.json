@@ -277,7 +277,7 @@
       "id": "6f82",
       "menteeId": "user_1729726224894_866",
       "mentorId": "user_1729707834699_949",
-      "status": "pending",
+      "status": "accepted",
       "message": "Awaiting your response."
     },
     {
@@ -322,6 +322,11 @@
       "id": "2348",
       "menteeId": "user_1729726224894_866",
       "mentorId": "user_1729725853930_521"
+    },
+    {
+      "id": "user_1729707834699_949-user_1729726224894_866",
+      "menteeId": "user_1729726224894_866",
+      "mentorId": "user_1729707834699_949"
     }
   ],
   "messages": [

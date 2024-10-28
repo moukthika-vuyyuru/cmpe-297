@@ -5,8 +5,10 @@ import MenteeList from "./MenteeList";
 import { useUserContext } from "./UserContext";
 import { FollowRequest } from "../types";
 import defaultAvatar from "../assets/default-avatar.jpeg";
+import Chat from "./Chat";
 
 interface Follow {
+  id: string;
   menteeId: string;
   mentorId: string;
 }
@@ -32,6 +34,7 @@ const MentorDashboard: React.FC = () => {
   const [follows, setFollows] = useState<Follow[]>([]);
   const [menteeMap, setMenteeMap] = useState<Record<string, string>>({});
   const [mentorName, setMentorName] = useState<string>("");
+  const [selectedMenteeId, setSelectedMenteeId] = useState<string | null>(null);
 
   useEffect(() => {
     // Fetch mentor details
@@ -82,7 +85,14 @@ const MentorDashboard: React.FC = () => {
           setFollowRequests((prev) =>
             prev.filter((req) => req.id !== requestId)
           );
-          const newFollow = { menteeId, mentorId: userId ?? "" };
+
+          // Create a new follow object including an id
+          const newFollow = {
+            id: `${userId}-${menteeId}`, // Generate a temporary ID or use your backend's response
+            menteeId,
+            mentorId: userId ?? "",
+          };
+
           setFollows((prev) => [...prev, newFollow]);
 
           return fetch(`http://localhost:5001/follows`, {
@@ -148,28 +158,53 @@ const MentorDashboard: React.FC = () => {
       </div>
 
       <div className={styles.content}>
-        {activeTab === "mentees" && <MenteeList follows={follows} />}
+        {/* {activeTab === "mentees" && <MenteeList follows={follows} />} */}
+        {activeTab === "mentees" && (
+          <div className={styles.menteesContainer}>
+            <MenteeList
+              follows={follows}
+              menteeMap={menteeMap}
+              onMenteeSelect={setSelectedMenteeId} // Pass selected mentee ID
+            />
+            <div className={styles.chatContainer}>
+              {selectedMenteeId ? (
+                <Chat recipientId={selectedMenteeId} /> // Pass selected mentee ID to Chat
+              ) : (
+                <p>Select a mentee to start chatting!</p>
+              )}
+            </div>
+          </div>
+        )}
         {activeTab === "requests" && (
           <div className={styles.requestsContainer}>
             {followRequests.map((request) => (
               <div key={request.id} className={styles.requestCard}>
                 <img
                   className={styles.menteeProfilePicture}
-                  src="path/to/mentee/picture"
+                  src="path/to/mentee/picture" // Update with the mentee's image source
                   alt="Mentee"
                   onError={(e) => (e.currentTarget.src = defaultAvatar)}
                 />
-                <span>{menteeMap[request.menteeId] || "Unknown Mentee"}</span>
+                <span className={styles.requestText}>
+                  {menteeMap[request.menteeId] || "Unknown Mentee"}
+                </span>
                 <button
+                  className={`${styles.requestButton}`}
                   onClick={() => handleAccept(request.id, request.menteeId)}
                 >
                   Accept
                 </button>
-                <button onClick={() => handleReject(request.id)}>Reject</button>
+                <button
+                  className={`${styles.rejectButton} ${styles.requestButton}`}
+                  onClick={() => handleReject(request.id)}
+                >
+                  Reject
+                </button>
               </div>
             ))}
           </div>
         )}
+
         {activeTab === "profile" && <MentorProfile />}
       </div>
     </div>

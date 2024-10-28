@@ -94,31 +94,90 @@
     /* Softer corners */
 }
 
+/* MentorDashboard.module.css */
+
 .requestsContainer {
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    /* Increased gap between requests */
+    /* Arrange requests in a column */
+    padding: 20px;
+    background-color: #ecf0f1;
+    /* Light background for contrast */
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow */
 }
 
 .requestCard {
     display: flex;
     align-items: center;
-    padding: 15px;
-    /* More padding */
+    /* Center items vertically */
+    padding: 12px;
+    border: 1px solid #e0e0e0;
+    /* Light border */
+    border-radius: 8px;
+    margin-bottom: 12px;
+    /* Space between requests */
     background-color: white;
-    /* White background */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    /* Enhanced shadow */
-    border-radius: 10px;
-    /* Softer corners */
-    transition: transform 0.2s;
-    /* Animation for hover effect */
+    /* White background for request cards */
+    transition: box-shadow 0.3s ease;
 }
 
 .requestCard:hover {
-    transform: translateY(-2px);
-    /* Slight lift on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Elevate card on hover */
+}
+
+.menteeProfilePicture {
+    width: 50px;
+    /* Fixed width for the mentee image */
+    height: 50px;
+    /* Fixed height for the mentee image */
+    border-radius: 50%;
+    /* Make the image round */
+    margin-right: 12px;
+    /* Space to the right of the image */
+}
+
+.requestText {
+    flex: 1;
+    /* Take up remaining space */
+    font-weight: bold;
+    /* Bold text for the mentee's name */
+}
+
+.requestButton {
+    margin-left: 12px;
+    /* Space between buttons */
+    padding: 8px 12px;
+    /* Padding for buttons */
+    border: none;
+    /* Remove default border */
+    border-radius: 4px;
+    /* Rounded corners */
+    background-color: #3498db;
+    /* Button color */
+    color: white;
+    /* Text color */
+    cursor: pointer;
+    /* Pointer cursor on hover */
+    transition: background-color 0.3s ease;
+    /* Transition for hover effect */
+}
+
+.requestButton:hover {
+    background-color: #2980b9;
+    /* Darker shade on hover */
+}
+
+.rejectButton {
+    background-color: #e74c3c;
+    /* Red color for reject button */
+}
+
+.rejectButton:hover {
+    background-color: #c0392b;
+    /* Darker shade on hover */
 }
 
 .menteeProfilePicture {
@@ -131,4 +190,24 @@
     /* Increased margin */
     border: 2px solid #3498db;
     /* Blue border for mentee pictures */
+}
+
+.menteesContainer {
+    width: 100%;
+    display: flex;
+    flex: 2;
+    background-color: #2c3e50;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+    padding: 20px;
+    margin-right: 20px;
+}
+
+.chatContainer {
+    flex: 1;
+    width: 75%;
+    padding: 20px;
+    border-left: 1px solid #ccc;
+    background-color: #ecf0f1;
+
 }
