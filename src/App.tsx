@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 import Home from "./components/Home";
 import Login from "./components/Login";
@@ -16,8 +21,6 @@ import { UserProvider } from "./components/UserContext"; // Ensure the path is c
 const App: React.FC = () => {
   return (
     <UserProvider>
-      {" "}
-      {/* Wrap the entire Router in UserProvider */}
       <Router>
         <Routes>
           {/* Main layout handling navbar, footer, and common pages */}
@@ -29,8 +32,10 @@ const App: React.FC = () => {
             <Route path="/mentor-dashboard" element={<MentorDashboard />} />
             <Route path="/mentor-timeline" element={<MentorTimeline />} />
             <Route path="/chat/:recipientId" element={<Chat />} />
-            <Route path="/mentee-dashboard" element={<MenteeDashboard />} />
           </Route>
+
+          {/* Render MenteeDashboard without MainLayout */}
+          <Route path="/mentee-dashboard" element={<MenteeDashboard />} />
 
           {/* Login and Register are separate pages */}
           <Route path="/login" element={<Login />} />

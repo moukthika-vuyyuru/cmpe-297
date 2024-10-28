@@ -1,29 +1,28 @@
-// src/components/MenteeList.tsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../styles/MenteeList.module.css"; // Adjust the path as needed
+import styles from "../styles/MenteeList.module.css"; // Adjust the path as needed
 import defaultAvatar from "../assets/default-avatar.jpeg";
 
 interface Mentee {
   id: string;
   name: string;
   image?: string;
+  latestMessage?: string; // Latest message property
 }
 
 interface MenteeListProps {
-  follows: { menteeId: string; mentorId: string }[]; // Define the follows prop type
+  follows: { menteeId: string; mentorId: string }[];
 }
 
 const MenteeList: React.FC<MenteeListProps> = ({ follows }) => {
   const [mentees, setMentees] = useState<Mentee[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState(""); // State for search input
+  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
-  // Fetch mentees dynamically with optional query parameter
   useEffect(() => {
     const url = searchTerm
-      ? `http://localhost:5001/mentees?name_like=${searchTerm}` // Using query param for filtering
+      ? `http://localhost:5001/mentees?name_like=${searchTerm}`
       : "http://localhost:5001/mentees";
 
     fetch(url)
@@ -36,49 +35,46 @@ const MenteeList: React.FC<MenteeListProps> = ({ follows }) => {
         console.error("Error fetching mentees:", error);
         setLoading(false);
       });
-  }, [searchTerm]); // Re-fetch data when searchTerm changes
+  }, [searchTerm]);
 
   const handleChatOpen = (menteeId: string) => {
     navigate(`/chat/${menteeId}`);
   };
 
-  // Filter mentees to show only those that have been accepted
   const menteesToShow = mentees.filter((mentee) =>
     follows.some((follow) => follow.menteeId === mentee.id)
   );
 
   return (
-    <div className="menteeListContainer">
+    <div className={styles.menteeListContainer}>
       <h2>Your Mentees</h2>
-
-      {/* Search input */}
       <input
         type="text"
         placeholder="Search mentees..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        className="searchInput"
+        className={styles.searchInput}
       />
 
       {loading ? (
         <p>Loading mentees...</p>
       ) : menteesToShow.length > 0 ? (
-        <div className="menteeList">
+        <div className={styles.menteeList}>
           {menteesToShow.map((mentee) => (
             <div
-              className="menteeItem"
+              className={styles.menteeItem}
               key={mentee.id}
               onClick={() => handleChatOpen(mentee.id)}
             >
-              <div className="menteeDetails">
-                <img
-                  src={mentee.image || defaultAvatar} // Use default image if mentee image is not available
-                  alt={`${mentee.name}'s profile`}
-                  className="menteeImage"
-                />
-                <div>
-                  <div className="menteeName">{mentee.name}</div>
-                  <button className="chatButton">Chat</button>
+              <img
+                src={mentee.image || defaultAvatar}
+                alt={`${mentee.name}'s profile`}
+                className={styles.menteeImage}
+              />
+              <div className={styles.menteeDetails}>
+                <div className={styles.menteeName}>{mentee.name}</div>
+                <div className={styles.latestMessage}>
+                  {mentee.latestMessage || "No messages yet"}
                 </div>
               </div>
             </div>

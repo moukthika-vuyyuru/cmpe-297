@@ -13,3 +13,9 @@ export interface FollowRequest {
   status: "pending" | "accepted";
   message: string;
 }
+
+export interface Follow {
+  id: string; // Add if you have an id for the follow relationship
+  menteeId: string;
+  mentorId: string;
+}

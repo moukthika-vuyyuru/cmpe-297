@@ -1,36 +1,29 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import styles from "../styles/Register.module.css";
-import defaultAvatar from "../assets/default-avatar.jpeg"; // Default avatar import
+import defaultAvatar from "../assets/default-avatar.jpeg";
 
 const Register: React.FC = () => {
-  const [step, setStep] = useState(1); // Track the form step
+  const navigate = useNavigate();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const initialRole = searchParams.get("role") || "mentee";
+
   const [formData, setFormData] = useState({
     username: "",
     password: "",
-    role: "mentee", // Default role
+    role: initialRole,
     name: "",
     email: "",
-    specialty: "", // Mentor-specific
-    designation: "", // Mentor-specific
-    company: "", // Mentor-specific
-    location: "", // Mentor-specific
-    skills: "", // Mentor-specific (comma-separated)
+    specialty: "",
+    designation: "",
+    company: "",
+    location: "",
+    skills: "",
   });
-  const [profilePicture, setProfilePicture] = useState<File | null>(null); // State for the profile picture
-  const [picturePreview, setPicturePreview] = useState<string | null>(null); // State for the preview of the picture
-  const navigate = useNavigate();
 
-  const generateUserId = () => {
-    return `user_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
-  };
-
-  useEffect(() => {
-    if (localStorage.getItem("token")) {
-      navigate("/"); // Redirect if logged in
-    }
-  }, [navigate]);
+  const [profilePicture, setProfilePicture] = useState<File | null>(null);
+  const [picturePreview, setPicturePreview] = useState<string | null>(null);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -43,9 +36,7 @@ const Register: React.FC = () => {
     if (file) {
       setProfilePicture(file);
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setPicturePreview(reader.result as string);
-      };
+      reader.onloadend = () => setPicturePreview(reader.result as string);
       reader.readAsDataURL(file);
     } else {
       setProfilePicture(null);
@@ -53,53 +44,54 @@ const Register: React.FC = () => {
     }
   };
 
-  const handleNextStep = (e: React.FormEvent) => {
-    e.preventDefault();
-    setStep(2); // Move to the second step
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // Generate a unique user ID
-      const userId = generateUserId();
-
-      // Prepare the user data to be saved in the users array
       const userData = {
-        id: userId, // Unique ID for the user
+        id: `user_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
         username: formData.username,
         password: formData.password,
         role: formData.role,
-        profilePicture: profilePicture
-          ? URL.createObjectURL(profilePicture) // Use the uploaded picture
-          : defaultAvatar, // Fallback to default avatar
       };
 
-      // Save user credentials to the users array
-      await axios.post("http://localhost:5001/users", userData);
+      // Save the user
+      await fetch("http://localhost:5001/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData),
+      });
 
-      // Mentor or mentee registration
+      const commonData = {
+        id: userData.id,
+        name: formData.name,
+        email: formData.email,
+        profilePicture: profilePicture
+          ? URL.createObjectURL(profilePicture)
+          : defaultAvatar,
+      };
+
+      // Save to mentees or mentors based on the role
       if (formData.role === "mentor") {
         const mentorData = {
-          id: userId, // Match mentor ID with user ID
-          name: formData.name,
-          email: formData.email,
+          ...commonData,
           specialty: formData.specialty,
           designation: formData.designation,
           company: formData.company,
           location: formData.location,
-          skills: formData.skills.split(",").map((skill) => skill.trim()),
-          profilePicture: userData.profilePicture, // Include profile picture
+          skills: formData.skills.split(",").map((skill) => skill.trim()), // Split skills into an array
         };
-        await axios.post("http://localhost:5001/mentors", mentorData);
-      } else if (formData.role === "mentee") {
-        const menteeData = {
-          id: userId, // Match mentee ID with user ID
-          name: formData.name,
-          email: formData.email,
-          profilePicture: userData.profilePicture, // Include profile picture
-        };
-        await axios.post("http://localhost:5001/mentees", menteeData);
+
+        await fetch("http://localhost:5001/mentors", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(mentorData),
+        });
+      } else {
+        await fetch("http://localhost:5001/mentees", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(commonData),
+        });
       }
 
       alert("Registration successful!");
@@ -111,20 +103,26 @@ const Register: React.FC = () => {
   };
 
   return (
-    <form
-      className={styles.form}
-      onSubmit={step === 1 ? handleNextStep : handleSubmit}
-    >
-      <h2>Register</h2>
-
-      {step === 1 ? (
-        // Step 1: Collect basic credentials
-        <>
+    <div className={styles.container}>
+      <div className={styles.banner}>
+        <img
+          src={require("../assets/MC.webp")}
+          alt="Community"
+          className={styles.bannerImage}
+        />
+      </div>
+      <div className={styles.loginSection}>
+        <div className={styles.heading}>
+          Register as{" "}
+          {formData.role.charAt(0).toUpperCase() + formData.role.slice(1)}
+        </div>
+        <form onSubmit={handleSubmit}>
           <input
             type="text"
             name="username"
             placeholder="Username"
             onChange={handleChange}
+            className={styles.inputField}
             required
           />
           <input
@@ -132,22 +130,15 @@ const Register: React.FC = () => {
             name="password"
             placeholder="Password"
             onChange={handleChange}
+            className={styles.inputField}
             required
           />
-          <select name="role" onChange={handleChange} value={formData.role}>
-            <option value="mentee">Mentee</option>
-            <option value="mentor">Mentor</option>
-          </select>
-          <button type="submit">Next</button>
-        </>
-      ) : (
-        // Step 2: Role-specific details
-        <>
           <input
             type="text"
             name="name"
             placeholder="Full Name"
             onChange={handleChange}
+            className={styles.inputField}
             required
           />
           <input
@@ -155,6 +146,7 @@ const Register: React.FC = () => {
             name="email"
             placeholder="Email"
             onChange={handleChange}
+            className={styles.inputField}
             required
           />
           <input type="file" accept="image/*" onChange={handleFileChange} />
@@ -165,13 +157,16 @@ const Register: React.FC = () => {
               className={styles.profilePreview}
             />
           )}
+
           {formData.role === "mentor" && (
             <>
+              <div className={styles.gap}></div> {/* Add a gap here */}
               <input
                 type="text"
                 name="specialty"
                 placeholder="Specialty"
                 onChange={handleChange}
+                className={styles.inputField}
                 required
               />
               <input
@@ -179,6 +174,7 @@ const Register: React.FC = () => {
                 name="designation"
                 placeholder="Designation"
                 onChange={handleChange}
+                className={styles.inputField}
                 required
               />
               <input
@@ -186,6 +182,7 @@ const Register: React.FC = () => {
                 name="company"
                 placeholder="Company"
                 onChange={handleChange}
+                className={styles.inputField}
                 required
               />
               <input
@@ -193,6 +190,7 @@ const Register: React.FC = () => {
                 name="location"
                 placeholder="Location"
                 onChange={handleChange}
+                className={styles.inputField}
                 required
               />
               <input
@@ -200,14 +198,18 @@ const Register: React.FC = () => {
                 name="skills"
                 placeholder="Skills (comma-separated)"
                 onChange={handleChange}
+                className={styles.inputField}
                 required
               />
             </>
           )}
-          <button type="submit">Register</button>
-        </>
-      )}
-    </form>
+
+          <button type="submit" className={styles.submitButton}>
+            Register
+          </button>
+        </form>
+      </div>
+    </div>
   );
 };
 

@@ -11,21 +11,21 @@ interface Mentor {
   name: string;
   specialty: string;
   image: string;
-  location: string; // Add location property
+  location: string;
 }
 
 const MenteeDashboard: React.FC = () => {
-  const { userId: menteeId } = useUserContext(); // Get menteeId from context
+  const { userId: menteeId, name: menteeName, logout } = useUserContext();
   const [mentors, setMentors] = useState<Mentor[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
   const [pendingRequests, setPendingRequests] = useState<FollowRequest[]>([]);
   const [followedMentors, setFollowedMentors] = useState<Mentor[]>([]);
   const [activeTab, setActiveTab] = useState<
-    "yourMentors" | "pendingRequests" | "searchForMentors"
-  >("yourMentors");
+    "home" | "applications" | "inquiries"
+  >("home");
+  const [recommendedMentors, setRecommendedMentors] = useState<Mentor[]>([]);
+
   const navigate = useNavigate();
 
-  // Fetch mentors from the backend
   useEffect(() => {
     const fetchMentors = async () => {
       try {
@@ -40,7 +40,6 @@ const MenteeDashboard: React.FC = () => {
     fetchMentors();
   }, []);
 
-  // Fetch pending follow requests for the mentee
   useEffect(() => {
     const fetchPendingRequests = async () => {
       if (!menteeId) return;
@@ -59,20 +58,25 @@ const MenteeDashboard: React.FC = () => {
     fetchPendingRequests();
   }, [menteeId]);
 
-  // Filter followed mentors based on accepted requests
   useEffect(() => {
     const acceptedMentorIds = pendingRequests
       .filter((request) => request.status === "accepted")
       .map((request) => request.mentorId);
-
     const followed = mentors.filter((mentor) =>
       acceptedMentorIds.includes(mentor.id)
     );
-
     setFollowedMentors(followed);
   }, [mentors, pendingRequests]);
 
-  // Handle follow request
+  useEffect(() => {
+    const availableMentors = mentors.filter(
+      (mentor) =>
+        !pendingRequests.some((req) => req.mentorId === mentor.id) &&
+        !followedMentors.some((followed) => followed.id === mentor.id)
+    );
+    setRecommendedMentors(availableMentors);
+  }, [mentors, pendingRequests, followedMentors]);
+
   const handleFollow = (mentorId: string) => {
     const message = prompt("Enter a message for the mentor:");
     if (!message) return;
@@ -101,150 +105,140 @@ const MenteeDashboard: React.FC = () => {
     sendFollowRequest();
   };
 
-  // Filter mentors that haven't been requested yet
-  const availableMentors = mentors.filter(
-    (mentor) =>
-      !pendingRequests.some((req) => req.mentorId === mentor.id) &&
-      !followedMentors.some((followed) => followed.id === mentor.id)
-  );
-
-  const handleViewAll = () => {
-    navigate("/all-mentors"); // Navigate to all mentors page
+  const handleLogout = () => {
+    logout(); // Call context logout function
+    alert("Logged out successfully!");
+    navigate("/"); // Redirect after logout
   };
 
   return (
-    <div className={styles.menteeDashboardContainer}>
-      <h2>Mentee Dashboard</h2>
-      <div className={styles.tabs}>
-        <button
-          className={activeTab === "yourMentors" ? styles.activeTab : ""}
-          onClick={() => setActiveTab("yourMentors")}
-        >
-          Your Mentors
+    <div className={styles.container}>
+      <nav className={styles.navbar}>
+        <button className={styles.logo} onClick={() => setActiveTab("home")}>
+          MC
         </button>
         <button
-          className={activeTab === "pendingRequests" ? styles.activeTab : ""}
-          onClick={() => setActiveTab("pendingRequests")}
+          className={styles.navButton}
+          onClick={() => setActiveTab("applications")}
         >
-          Pending Requests
+          Applications
         </button>
         <button
-          className={activeTab === "searchForMentors" ? styles.activeTab : ""}
-          onClick={() => setActiveTab("searchForMentors")}
+          className={styles.navButton}
+          onClick={() => setActiveTab("inquiries")}
         >
-          Search for Mentors
+          Inquiries
         </button>
-      </div>
+        <button
+          className={styles.signoutButton}
+          onClick={handleLogout} // Updated to use the logout function
+        >
+          Sign Out
+        </button>
+      </nav>
+
+      {activeTab === "home" && (
+        <div className={styles.banner}>
+          <h2>Welcome, {menteeName}!</h2>
+          <p>
+            Start connecting with mentors and get ready to take your career to
+            the next level!
+          </p>
+          <button
+            className={styles.browseButton}
+            onClick={() => navigate("/all-mentors")}
+          >
+            Browse Mentors
+          </button>
+        </div>
+      )}
 
       <div className={styles.tabContent}>
-        {activeTab === "yourMentors" && (
-          <>
-            <h3>Your Mentors</h3>
-            <div className={styles.mentorList}>
-              {followedMentors.length > 0 ? (
-                followedMentors.map((mentor) => (
-                  <div key={mentor.id} className={styles.mentorCard}>
-                    <img
-                      src={mentor.image || defaultAvatar}
-                      alt={mentor.name}
-                      className={styles.mentorImage}
-                    />
-                    <div className={styles.mentorDetails}>
-                      <h3>{mentor.name}</h3>
-                      <p>{mentor.specialty}</p>
-                      <div className={styles.mentorLocation}>
-                        <FaMapMarkerAlt />
-                        <span>{mentor.location}</span>
+        {activeTab === "applications" && (
+          <div className={styles.mentorList}>
+            {pendingRequests.filter((request) => request.status === "pending")
+              .length > 0 ? (
+              pendingRequests
+                .filter((request) => request.status === "pending")
+                .map((request) => {
+                  const mentor = mentors.find(
+                    (mentor) => mentor.id === request.mentorId
+                  );
+                  return (
+                    mentor && (
+                      <div key={request.id} className={styles.mentorCard}>
+                        <p>Request to {mentor.name} is pending.</p>
                       </div>
-                      <button
-                        className={styles.messageButton}
-                        onClick={() => navigate(`/chat/${mentor.id}`)}
-                      >
-                        Message
-                      </button>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p>You are not following any mentors yet.</p>
-              )}
-            </div>
-          </>
+                    )
+                  );
+                })
+            ) : (
+              <p>No pending follow requests.</p>
+            )}
+          </div>
         )}
 
-        {activeTab === "pendingRequests" && (
-          <>
-            <h3>Pending Requests</h3>
-            <div className={styles.mentorList}>
-              {pendingRequests.filter((request) => request.status === "pending")
-                .length > 0 ? (
-                pendingRequests
-                  .filter((request) => request.status === "pending")
-                  .map((request) => {
-                    const mentor = mentors.find(
-                      (mentor) => mentor.id === request.mentorId
-                    );
-                    return (
-                      mentor && (
-                        <div key={request.id} className={styles.mentorCard}>
-                          <p>Request to {mentor.name} is pending.</p>
-                        </div>
-                      )
-                    );
-                  })
-              ) : (
-                <p>No pending follow requests.</p>
-              )}
-            </div>
-          </>
+        {activeTab === "inquiries" && (
+          <div className={styles.mentorList}>
+            {followedMentors.length > 0 ? (
+              followedMentors.map((mentor) => (
+                <div key={mentor.id} className={styles.mentorCard}>
+                  <img
+                    src={mentor.image || defaultAvatar}
+                    alt={mentor.name}
+                    className={styles.mentorImage}
+                  />
+                  <div className={styles.mentorDetails}>
+                    <h3>{mentor.name}</h3>
+                    <p>{mentor.specialty}</p>
+                    <div className={styles.mentorLocation}>
+                      <FaMapMarkerAlt />
+                      <span>{mentor.location}</span>
+                    </div>
+                    <button
+                      className={styles.messageButton}
+                      onClick={() => navigate(`/chat/${mentor.id}`)}
+                    >
+                      Message
+                    </button>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p>You are not following any mentors yet.</p>
+            )}
+          </div>
         )}
 
-        {activeTab === "searchForMentors" && (
-          <>
-            <h3>Search for Mentors</h3>
-            <input
-              type="text"
-              placeholder="Search by name or specialty"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className={styles.searchInput}
-            />
-            <div className={styles.mentorList}>
-              {availableMentors
-                .filter(
-                  (mentor) =>
-                    mentor.name
-                      .toLowerCase()
-                      .includes(searchTerm.toLowerCase()) ||
-                    mentor.specialty
-                      .toLowerCase()
-                      .includes(searchTerm.toLowerCase())
-                )
-                .map((mentor) => (
-                  <div key={mentor.id} className={styles.mentorCard}>
-                    <img
-                      src={mentor.image || defaultAvatar}
-                      alt={mentor.name}
-                      className={styles.mentorImage}
-                    />
-                    <div className={styles.mentorDetails}>
-                      <h3>{mentor.name}</h3>
-                      <p>{mentor.specialty}</p>
-                      <div className={styles.mentorLocation}>
-                        <FaMapMarkerAlt />
-                        <span>{mentor.location}</span>
-                      </div>
-                      <button
-                        className={styles.followButton}
-                        onClick={() => handleFollow(mentor.id)}
-                      >
-                        Follow
-                      </button>
+        {activeTab === "home" && recommendedMentors.length > 0 && (
+          <div className={styles.recommendedSection}>
+            <h3>Recommended for You</h3>
+            <div className={styles.recommendedMentors}>
+              {recommendedMentors.slice(0, 4).map((mentor) => (
+                <div key={mentor.id} className={styles.recommendedMentorCard}>
+                  <img
+                    src={mentor.image || defaultAvatar}
+                    alt={mentor.name}
+                    className={styles.recommendedMentorImage}
+                  />
+                  <div className={styles.recommendedMentorDetails}>
+                    <h4>{mentor.name}</h4>
+                    <p>{mentor.specialty}</p>
+                    <div className={styles.recommendedMentorLocation}>
+                      <FaMapMarkerAlt />
+                      <span>{mentor.location}</span>
                     </div>
+                    <button
+                      className={styles.followButton}
+                      onClick={() => handleFollow(mentor.id)}
+                    >
+                      Follow
+                    </button>
                   </div>
-                ))}
+                </div>
+              ))}
             </div>
-          </>
+          </div>
         )}
       </div>
     </div>

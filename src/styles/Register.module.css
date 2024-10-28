@@ -1,64 +1,103 @@
-/* src/pages/Login.module.css and Register.module.css
-.form {
+.container {
   display: flex;
-  flex-direction: column;
+  height: 100vh;
+  background-color: #f5f6fa;
+}
+
+.banner {
+  flex: 1;
+  display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 1rem;
-  max-width: 400px;
-  margin: 2rem auto;
-  padding: 2rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  background-color: #f9f9f9;
+  background-color: #eef1f6;
 }
 
-.form input {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+.bannerImage {
+  width: 80%;
+  height: auto;
 }
 
-.form button {
-  padding: 0.75rem 2rem;
-  border: none;
-  background-color: #4caf50;
-  color: white;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-.form button:hover {
-  background-color: #45a049;
-} */
-.form {
+.loginSection {
+  flex: 1;
+  padding: 60px;
   display: flex;
   flex-direction: column;
-  max-width: 400px;
-  margin: 0 auto;
+  justify-content: center;
+  align-items: center;
 }
 
-input,
-select,
-button {
-  margin: 10px 0;
-  padding: 10px;
+.formContainer {
+  width: 60%;
 }
 
-button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  cursor: pointer;
+h2 {
+  font-size: 28px;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
 }
 
-button:hover {
-  background-color: #0056b3;
+.label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+  color: #555;
+}
+
+.inputField {
+  width: 70%;
+  padding: 12px;
+  font-size: 16px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+.fileInput {
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .profilePreview {
-  margin-top: 10px;
+  margin-top: 15px;
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #007bff;
+}
+
+.submitButton {
+  width: 70%;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  font-size: 18px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+}
+
+.submitButton:hover {
+  background-color: #0056b3;
+}
+
+.heading {
+  text-align: left;
+  /* Aligns the heading to the left */
   width: 100%;
-  height: auto;
-  border-radius: 4px;
+  /* Ensures it spans the width of the form */
+  margin-bottom: 20px;
+  /* Adds space below the heading */
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+}
+
+.gap {
+  margin-bottom: 20px;
+  /* Adjust the value as needed */
 }

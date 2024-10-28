@@ -1,72 +1,117 @@
-.loginContainer {
+.container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  /* Center the form */
-  justify-content: center;
-  /* Center vertically */
   height: 100vh;
-  /* Full viewport height */
+  /* Full height */
+}
+
+.banner {
+  flex: 1;
+  /* Take 1 part of the available width */
+  padding: 20px;
   background-color: #f9f9f9;
-  /* Light background for contrast */
-}
-
-.title {
-  font-size: 24px;
-  margin-bottom: 20px;
-  color: #333;
-  /* Dark color for title */
-}
-
-.loginForm {
+  /* Adjust as needed */
   display: flex;
   flex-direction: column;
-  width: 100%;
-  /* Full width for the form */
-  max-width: 400px;
-  /* Set a max-width */
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
+  justify-content: center;
+  align-items: center;
+}
+
+.loginSection {
+  flex: 1;
+  /* Take another part of the available width */
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.tabs {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.tab {
+  padding: 10px 20px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  margin-right: 10px;
+  color: #007bff;
+  /* Tab text color */
+  font-weight: bold;
+  /* Make text bold */
+  font-size: 18px;
+  /* Increase font size */
+}
+
+.active {
+  border-bottom: 2px solid #007bff;
+  /* Underline color for active tab */
+  color: #007bff;
+  /* Active tab color */
 }
 
 .inputField {
-  margin-bottom: 15px;
+  width: 50%;
+  /* Full width for shorter fields */
+  margin-bottom: 10px;
   padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  /* Increase padding for better touch targets */
   font-size: 16px;
-  transition: border-color 0.3s;
-}
-
-.inputField:focus {
-  border-color: #007bff;
-  /* Highlight border on focus */
-  outline: none;
-  /* Remove default outline */
+  /* Increase font size */
 }
 
 .submitButton {
+  width: 53%;
+  /* Full width button */
   padding: 10px;
-  border: none;
-  border-radius: 4px;
   background-color: #007bff;
-  color: rgb(231, 204, 204);
-  font-size: 16px;
+  /* Button color */
+  color: white;
+  border: none;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  font-size: 16px;
+  /* Increase font size */
 }
 
-.submitButton:hover {
+.signupLinks {
+  margin-top: 20px;
+}
+
+.signupButtonContainer {
+  display: flex;
+  /* Use flexbox */
+  align-items: center;
+  /* Center items vertically */
+  gap: 10px;
+  /* Space between buttons and text */
+}
+
+.signupButton {
+  background-color: #007bff;
+  /* Button color */
+  color: white;
+  /* Text color */
+  border: none;
+  /* No border */
+  padding: 10px 20px;
+  /* Padding */
+  border-radius: 5px;
+  /* Rounded corners */
+  cursor: pointer;
+  /* Pointer on hover */
+  font-size: 16px;
+  /* Increase font size */
+}
+
+.signupButton:hover {
   background-color: #0056b3;
-  /* Darker blue on hover */
+  /* Darker color on hover */
 }
 
-/* Optional: add a class for error messages */
-.errorMessage {
-  color: red;
-  font-size: 14px;
-  margin-top: 10px;
+.bannerImage {
+  width: 100%;
+  /* Make the image responsive */
+  height: auto;
+  /* Maintain aspect ratio */
 }

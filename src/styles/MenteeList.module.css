@@ -14,81 +14,48 @@
 
 .menteeList {
     display: flex;
-    flex-wrap: wrap;
-    /* Allow cards to wrap */
-    justify-content: center;
-    /* Center the cards */
+    flex-direction: column;
+    /* Stack mentees vertically */
 }
 
 .menteeItem {
+    display: flex;
+    align-items: center;
+    /* Center items vertically */
     background-color: #ffffff;
-    /* Card background */
     border-radius: 12px;
-    /* Rounded corners */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    /* Shadow for depth */
-    padding: 15px;
-    /* Internal padding */
-    margin: 10px;
-    /* Margin between cards */
-    width: 250px;
-    /* Fixed width for cards */
-    transition: transform 0.2s;
-    /* Smooth scaling effect */
+    padding: 10px;
+    /* Adjust padding for a compact view */
+    margin: 5px 0;
+    /* Margin between items */
     cursor: pointer;
-    /* Pointer cursor for interactive elements */
+    transition: background-color 0.2s;
+    /* Smooth background transition */
+    max-width: 200px;
+    /* Reduced width */
 }
 
 .menteeItem:hover {
-    transform: scale(1.02);
-    /* Slightly scale up on hover */
-}
-
-.menteeDetails {
-    display: flex;
-    /* Flexbox for layout */
-    align-items: center;
-    /* Center vertically */
+    background-color: #f0f0f0;
+    /* Light grey on hover */
 }
 
 .menteeImage {
-    width: 60px;
-    /* Increased size */
-    height: 60px;
-    /* Increased size */
+    width: 40px;
+    /* Smaller image */
+    height: 40px;
+    /* Smaller image */
     border-radius: 50%;
     /* Circular image */
-    margin-right: 15px;
+    margin-right: 10px;
     /* Space between image and name */
 }
 
 .menteeName {
-    font-size: 18px;
-    /* Adjust font size */
+    font-size: 16px;
+    /* Adjust font size as needed */
     font-weight: bold;
-    /* Bold text */
     color: #333;
     /* Text color */
-}
-
-.chatButton {
-    background-color: #007bff;
-    /* Primary button color */
-    color: white;
-    /* White text */
-    border: none;
-    /* No border */
-    border-radius: 5px;
-    /* Rounded corners */
-    padding: 8px 12px;
-    /* Padding */
-    cursor: pointer;
-    /* Pointer cursor */
-    transition: background-color 0.3s;
-    /* Smooth transition */
-}
-
-.chatButton:hover {
-    background-color: #0056b3;
-    /* Darker shade on hover */
 }

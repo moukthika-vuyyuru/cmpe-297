@@ -1,14 +1,26 @@
 import React, { useEffect, useState } from "react";
 import styles from "../styles/MentorDashboard.module.css";
-import MentorRequests from "./MentorRequests";
 import MentorProfile from "./MentorProfile";
 import MenteeList from "./MenteeList";
 import { useUserContext } from "./UserContext";
 import { FollowRequest } from "../types";
+import defaultAvatar from "../assets/default-avatar.jpeg";
 
 interface Follow {
   menteeId: string;
   mentorId: string;
+}
+
+interface Mentee {
+  id: string;
+  name: string;
+  email: string;
+}
+
+interface Mentor {
+  id: string;
+  name: string;
+  email: string;
 }
 
 const MentorDashboard: React.FC = () => {
@@ -18,8 +30,32 @@ const MentorDashboard: React.FC = () => {
   >("mentees");
   const [followRequests, setFollowRequests] = useState<FollowRequest[]>([]);
   const [follows, setFollows] = useState<Follow[]>([]);
+  const [menteeMap, setMenteeMap] = useState<Record<string, string>>({});
+  const [mentorName, setMentorName] = useState<string>("");
 
-  // Fetch follow requests
+  useEffect(() => {
+    // Fetch mentor details
+    fetch(`http://localhost:5001/mentors/${userId}`)
+      .then((res) => res.json())
+      .then((data: Mentor) => {
+        setMentorName(data.name); // Store the mentor's name
+      })
+      .catch((err) => console.error("Failed to load mentor data", err));
+  }, [userId]);
+
+  useEffect(() => {
+    fetch(`http://localhost:5001/mentees`)
+      .then((res) => res.json())
+      .then((data: Mentee[]) => {
+        const menteeData = data.reduce(
+          (map, mentee) => ({ ...map, [mentee.id]: mentee.name }),
+          {}
+        );
+        setMenteeMap(menteeData);
+      })
+      .catch((err) => console.error("Failed to load mentees", err));
+  }, []);
+
   useEffect(() => {
     fetch(
       `http://localhost:5001/followRequests?mentorId=${userId}&status=pending`
@@ -27,10 +63,7 @@ const MentorDashboard: React.FC = () => {
       .then((res) => res.json())
       .then((data: FollowRequest[]) => setFollowRequests(data))
       .catch((err) => console.error("Failed to load follow requests", err));
-  }, [userId]);
 
-  // Fetch followed mentees
-  useEffect(() => {
     fetch(`http://localhost:5001/follows?mentorId=${userId}`)
       .then((res) => res.json())
       .then((data: Follow[]) => setFollows(data))
@@ -46,11 +79,9 @@ const MentorDashboard: React.FC = () => {
       .then((res) => {
         if (res.ok) {
           alert("Request accepted!");
-
           setFollowRequests((prev) =>
             prev.filter((req) => req.id !== requestId)
           );
-
           const newFollow = { menteeId, mentorId: userId ?? "" };
           setFollows((prev) => [...prev, newFollow]);
 
@@ -85,37 +116,59 @@ const MentorDashboard: React.FC = () => {
 
   return (
     <div className={styles.dashboardContainer}>
-      {/* Tab Navigation */}
-      <div className={styles.tabs}>
+      <div className={styles.sidebar}>
+        <div className={styles.profileCard}>
+          <img
+            className={styles.profilePicture}
+            src="path/to/profile/picture"
+            alt="Default Avatar"
+            onError={(e) => (e.currentTarget.src = defaultAvatar)}
+          />
+          <h3 className={styles.username}>{mentorName || "Loading..."}</h3>{" "}
+          {/* Render mentor name */}
+        </div>
         <button
-          className={activeTab === "mentees" ? styles.activeTab : ""}
+          className={styles.sidebarButton}
           onClick={() => setActiveTab("mentees")}
         >
           Your Mentees
         </button>
         <button
-          className={activeTab === "requests" ? styles.activeTab : ""}
+          className={styles.sidebarButton}
           onClick={() => setActiveTab("requests")}
         >
           Follow Requests
         </button>
         <button
-          className={activeTab === "profile" ? styles.activeTab : ""}
+          className={styles.sidebarButton}
           onClick={() => setActiveTab("profile")}
         >
           Profile
         </button>
       </div>
 
-      {/* Tab Content */}
-      <div className={styles.tabContent}>
+      <div className={styles.content}>
         {activeTab === "mentees" && <MenteeList follows={follows} />}
         {activeTab === "requests" && (
-          <MentorRequests
-            followRequests={followRequests}
-            onAccept={handleAccept}
-            onReject={handleReject}
-          />
+          <div className={styles.requestsContainer}>
+            {followRequests.map((request) => (
+              <div key={request.id} className={styles.requestCard}>
+                <img
+                  className={styles.menteeProfilePicture}
+                  src="path/to/mentee/picture"
+                  alt="Mentee"
+                  onError={(e) => (e.currentTarget.src = defaultAvatar)}
+                />
+                <span>{menteeMap[request.menteeId] || "Unknown Mentee"}</span>
+                <button
+                  onClick={() => handleAccept(request.id, request.menteeId)}
+                >
+                  Accept
+                </button>
+                <button onClick={() => handleReject(request.id)}>Reject</button>
+              </div>
+            ))}
+          </div>
         )}
         {activeTab === "profile" && <MentorProfile />}
       </div>
