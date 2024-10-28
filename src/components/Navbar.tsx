@@ -5,6 +5,7 @@ import styles from "../styles/Navbar.module.css";
 
 const Navbar: React.FC = () => {
   const { userId, logout } = useUserContext(); // Get userId and logout function from context
+  const { name } = useUserContext();
   const navigate = useNavigate();
   const isLoggedIn = Boolean(userId); // Check if userId is available
 
@@ -22,7 +23,7 @@ const Navbar: React.FC = () => {
         <Link to="/testimonials">Testimonials</Link>
         {isLoggedIn ? (
           <>
-            <span className={styles.username}>Welcome, User!</span>{" "}
+            <span className={styles.username}>Welcome, {name}!</span>{" "}
             {/* Optional: Display username */}
             <button onClick={handleLogout} className={styles.logoutButton}>
               Logout

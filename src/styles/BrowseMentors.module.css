@@ -1,0 +1,122 @@
+.container {
+    padding: 20px;
+    max-width: 1200px;
+    /* Limit max width for better layout */
+    margin: auto;
+    /* Center container */
+}
+
+.searchInput {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    /* Slightly lighter border */
+    border-radius: 8px;
+    /* More rounded corners */
+    font-size: 16px;
+    /* Increase font size for better readability */
+    transition: border-color 0.3s;
+}
+
+.searchInput:focus {
+    border-color: #007bff;
+    /* Highlight border on focus */
+    outline: none;
+    /* Remove default outline */
+}
+
+.mentorList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    /* Space between cards */
+}
+
+.mentorCard {
+    background: #fff;
+    /* White background for contrast */
+    border-radius: 12px;
+    /* More rounded corners */
+    padding: 15px;
+    /* More padding for comfort */
+    width: calc(25% - 20px);
+    /* Adjust to fit your layout */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow */
+    transition: transform 0.2s;
+    /* Animation for hover effect */
+}
+
+.mentorCard:hover {
+    transform: translateY(-5px);
+    /* Lift effect on hover */
+}
+
+.mentorImage {
+    width: 100%;
+    height: 150px;
+    /* Fixed height for uniformity */
+    border-radius: 12px;
+    /* Consistent border radius */
+    object-fit: cover;
+    /* Cover to fill the area */
+}
+
+.mentorDetails {
+    margin-top: 10px;
+}
+
+.mentorName {
+    font-size: 18px;
+    /* Slightly larger name */
+    font-weight: bold;
+    /* Bold for emphasis */
+}
+
+.mentorLocation {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+    /* Spacing from the name */
+}
+
+.mentorLocation span {
+    margin-left: 5px;
+    color: #666;
+    /* Lighter color for less emphasis */
+}
+
+.followButton {
+    background-color: #007bff;
+    /* Primary color */
+    color: white;
+    border: none;
+    /* No border for a cleaner look */
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    /* Space above button */
+    font-size: 14px;
+    /* Slightly smaller font */
+    transition: background-color 0.3s, transform 0.2s;
+    /* Smooth transitions */
+}
+
+.followButton:hover {
+    background-color: #0056b3;
+    /* Darker shade on hover */
+    transform: translateY(-2px);
+    /* Lift effect on hover */
+}
+
+.followed {
+    background-color: #dc3545;
+    /* Color for unfollow */
+}
+
+.followed:hover {
+    background-color: #c82333;
+    /* Darker shade for unfollow hover */
+}

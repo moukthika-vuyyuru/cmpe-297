@@ -152,7 +152,7 @@ const MenteeDashboard: React.FC = () => {
           </p>
           <button
             className={styles.browseButton}
-            onClick={() => navigate("/all-mentors")}
+            onClick={() => navigate("/browse-mentors")} // Update the route to your new component
           >
             Browse Mentors
           </button>
