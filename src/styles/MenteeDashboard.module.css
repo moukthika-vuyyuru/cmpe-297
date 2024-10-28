@@ -237,3 +237,55 @@
     border-radius: 50%;
     margin-bottom: 10px;
 }
+
+.inquiriesContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.mentorList {
+    flex: 1;
+    /* This will take most of the space */
+    margin-right: 20px;
+    /* Space between mentor list and chat */
+}
+
+.chatContainer {
+    flex: 2;
+    /* This will take more space for the chat */
+    background-color: #f9f9f9;
+    /* Add a background color */
+    padding: 20px;
+    /* Add some padding */
+    border-radius: 8px;
+    /* Rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    /* Light shadow for depth */
+}
+
+.mentorCard {
+    display: flex;
+    cursor: pointer;
+    /* Cursor indicates clickable */
+    padding: 10px;
+    border: 1px solid #ccc;
+    /* Light border */
+    border-radius: 5px;
+    /* Rounded corners */
+    margin-bottom: 10px;
+    /* Space between cards */
+    transition: background-color 0.3s;
+    /* Smooth transition */
+}
+
+.mentorCard:hover {
+    background-color: #f1f1f1;
+    /* Highlight on hover */
+}
+
+.chatBox {
+    /* Style for the chat area */
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+}

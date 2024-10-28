@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
-import { useUserContext } from "./UserContext"; // Assuming it provides user info
+import { useUserContext } from "./UserContext";
 import styles from "../styles/Chat.module.css";
 
-const Chat: React.FC = () => {
-  const { recipientId } = useParams<{ recipientId: string }>(); // From the URL
+interface ChatProps {
+  recipientId: string; // Define recipientId as a required prop
+}
+
+const Chat: React.FC<ChatProps> = ({ recipientId }) => {
   const { userId: contextUserId } = useUserContext(); // From logged-in user context
   const senderId = contextUserId || localStorage.getItem("userId");
 
@@ -42,7 +44,6 @@ const Chat: React.FC = () => {
     fetchMessages();
   }, [senderId, recipientId, isValidChat]);
 
-  //print senderId and recipientId as p tags
   const sendMessage = async () => {
     if (!input.trim() || !isValidChat) return;
 
@@ -73,7 +74,6 @@ const Chat: React.FC = () => {
   }
 
   return (
-    // print senderId and recipientId as p tags
     <div className={styles.chatContainer}>
       <div className={styles.messages}>
         {messages.map((msg, index) => (

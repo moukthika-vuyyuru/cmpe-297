@@ -5,6 +5,7 @@ import styles from "../styles/MenteeDashboard.module.css";
 import { FollowRequest } from "../types";
 import defaultAvatar from "../assets/default-avatar.jpeg";
 import { FaMapMarkerAlt } from "react-icons/fa";
+import Chat from "./Chat"; // Import the Chat component
 
 interface Mentor {
   id: string;
@@ -23,6 +24,7 @@ const MenteeDashboard: React.FC = () => {
     "home" | "applications" | "inquiries"
   >("home");
   const [recommendedMentors, setRecommendedMentors] = useState<Mentor[]>([]);
+  const [selectedMentor, setSelectedMentor] = useState<Mentor | null>(null); // State for selected mentor
 
   const navigate = useNavigate();
 
@@ -111,6 +113,10 @@ const MenteeDashboard: React.FC = () => {
     navigate("/"); // Redirect after logout
   };
 
+  const handleMentorSelect = (mentor: Mentor) => {
+    setSelectedMentor(mentor); // Set the selected mentor for chat
+  };
+
   return (
     <div className={styles.container}>
       <nav className={styles.navbar}>
@@ -132,10 +138,7 @@ const MenteeDashboard: React.FC = () => {
         >
           Inquiries
         </button>
-        <button
-          className={styles.signoutButton}
-          onClick={handleLogout} // Updated to use the logout function
-        >
+        <button className={styles.signoutButton} onClick={handleLogout}>
           Sign Out
         </button>
       </nav>
@@ -182,34 +185,42 @@ const MenteeDashboard: React.FC = () => {
         )}
 
         {activeTab === "inquiries" && (
-          <div className={styles.mentorList}>
-            {followedMentors.length > 0 ? (
-              followedMentors.map((mentor) => (
-                <div key={mentor.id} className={styles.mentorCard}>
-                  <img
-                    src={mentor.image || defaultAvatar}
-                    alt={mentor.name}
-                    className={styles.mentorImage}
-                  />
-                  <div className={styles.mentorDetails}>
-                    <h3>{mentor.name}</h3>
-                    <p>{mentor.specialty}</p>
-                    <div className={styles.mentorLocation}>
-                      <FaMapMarkerAlt />
-                      <span>{mentor.location}</span>
+          <div className={styles.inquiriesContainer}>
+            <div className={styles.mentorList}>
+              {followedMentors.length > 0 ? (
+                followedMentors.map((mentor) => (
+                  <div
+                    key={mentor.id}
+                    className={styles.mentorCard}
+                    onClick={() => handleMentorSelect(mentor)}
+                  >
+                    <img
+                      src={mentor.image || defaultAvatar}
+                      alt={mentor.name}
+                      className={styles.mentorImage}
+                    />
+                    <div className={styles.mentorDetails}>
+                      <h3>{mentor.name}</h3>
+                      <p>{mentor.specialty}</p>
+                      <div className={styles.mentorLocation}>
+                        <FaMapMarkerAlt />
+                        <span>{mentor.location}</span>
+                      </div>
                     </div>
-                    <button
-                      className={styles.messageButton}
-                      onClick={() => navigate(`/chat/${mentor.id}`)}
-                    >
-                      Message
-                    </button>
                   </div>
-                </div>
-              ))
-            ) : (
-              <p>You are not following any mentors yet.</p>
-            )}
+                ))
+              ) : (
+                <p>You are not following any mentors yet.</p>
+              )}
+            </div>
+
+            <div className={styles.chatContainer}>
+              {selectedMentor ? (
+                <Chat recipientId={selectedMentor.id} />
+              ) : (
+                <p>Select a mentor to start chatting!</p>
+              )}
+            </div>
           </div>
         )}
 

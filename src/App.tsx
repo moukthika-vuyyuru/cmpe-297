@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  useLocation,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 import Home from "./components/Home";
 import Login from "./components/Login";
@@ -14,9 +9,8 @@ import HowItWorks from "./components/HowItWorks";
 import Testimonials from "./components/Testimonials";
 import MentorTimeline from "./components/MentorTimeline";
 import MentorDashboard from "./components/MentorDashboard";
-import Chat from "./components/Chat";
 import MenteeDashboard from "./components/MenteeDashboard";
-import { UserProvider } from "./components/UserContext"; // Ensure the path is correct
+import { UserProvider } from "./components/UserContext";
 
 const App: React.FC = () => {
   return (
@@ -31,7 +25,6 @@ const App: React.FC = () => {
             <Route path="profile" element={<UserProfile />} />
             <Route path="/mentor-dashboard" element={<MentorDashboard />} />
             <Route path="/mentor-timeline" element={<MentorTimeline />} />
-            <Route path="/chat/:recipientId" element={<Chat />} />
           </Route>
 
           {/* Render MenteeDashboard without MainLayout */}
