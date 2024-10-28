@@ -73,9 +73,6 @@ const MenteeList: React.FC<MenteeListProps> = ({ follows }) => {
               />
               <div className={styles.menteeDetails}>
                 <div className={styles.menteeName}>{mentee.name}</div>
-                <div className={styles.latestMessage}>
-                  {mentee.latestMessage || "No messages yet"}
-                </div>
               </div>
             </div>
           ))}

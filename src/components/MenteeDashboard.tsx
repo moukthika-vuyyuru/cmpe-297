@@ -114,8 +114,11 @@ const MenteeDashboard: React.FC = () => {
   return (
     <div className={styles.container}>
       <nav className={styles.navbar}>
-        <button className={styles.logo} onClick={() => setActiveTab("home")}>
-          MC
+        <button
+          className={styles.navButton}
+          onClick={() => setActiveTab("home")}
+        >
+          MentorConnect
         </button>
         <button
           className={styles.navButton}

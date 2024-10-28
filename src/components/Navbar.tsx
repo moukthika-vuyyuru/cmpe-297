@@ -18,7 +18,6 @@ const Navbar: React.FC = () => {
     <header className={styles.navbar}>
       <div className={styles.logo}>MentorConnect</div>
       <nav>
-        <Link to="/mentors">Find Mentors</Link>
         <Link to="/how-it-works">How It Works</Link>
         <Link to="/testimonials">Testimonials</Link>
         {isLoggedIn ? (
