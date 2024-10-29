@@ -1,0 +1,61 @@
+/* src/components/Home.css */
+
+.home {
+    padding: 0rem;
+    background-color: #f8f9fa;
+}
+
+/* Philosophy Section */
+.philosophy_section {
+    text-align: center;
+    padding: 2rem;
+}
+
+.philosophy_cards {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.card {
+    flex: 1;
+    padding: 1.5rem;
+    background-color: #f0f4f8;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Steps Section */
+.steps_section {
+    text-align: center;
+    padding: 2rem;
+}
+
+.steps {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.step {
+    background-color: #e0f7fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    width: 200px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .philosophy-cards {
+        flex-direction: column;
+    }
+}

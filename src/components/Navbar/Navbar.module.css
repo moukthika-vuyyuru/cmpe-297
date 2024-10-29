@@ -1,0 +1,64 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #333;
+  color: white;
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+}
+
+.iconTextContainer {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.iconTextContainer > * {
+  margin: 0;
+}
+
+.leftSection {
+  display: flex;
+  align-items: center;
+}
+
+.leftSection > * {
+  margin-right: 15px;
+}
+
+.rightSection {
+  display: flex;
+  align-items: center;
+}
+
+.rightSection > * {
+  margin-left: 15px;
+}
+
+.button,
+.homeButton {
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: white;
+  display: flex;
+  /* font-size: 16px; */
+  /* margin: 0 0.5rem; */
+}
+
+.homeButton span {
+  margin-left: 5px;
+}
+
+.button:hover {
+  text-decoration: underline;
+}
+
+.homeButton:hover {
+  text-decoration: none;
+}
