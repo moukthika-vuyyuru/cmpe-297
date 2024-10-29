@@ -1,17 +1,11 @@
-// src/components/MenteeList.tsx
 import React from "react";
-import styles from "../styles/MenteeList.module.css"; // Import your CSS module
+import styles from "../styles/MenteeList.module.css";
 import defaultAvatar from "../assets/default-avatar.jpeg";
 
-interface Follow {
-  menteeId: string;
-  mentorId: string;
-}
-
 interface MenteeListProps {
-  follows: Follow[];
-  menteeMap: Record<string, string>; // Mapping of mentee IDs to names
-  onMenteeSelect: (menteeId: string) => void; // Prop to handle mentee selection
+  follows: { menteeId: string; id: string }[]; // Adjust according to your follow structure
+  menteeMap: Record<string, string>;
+  onMenteeSelect: (menteeId: string) => void;
 }
 
 const MenteeList: React.FC<MenteeListProps> = ({
@@ -20,23 +14,22 @@ const MenteeList: React.FC<MenteeListProps> = ({
   onMenteeSelect,
 }) => {
   return (
-    <div className={styles.menteesContainer}>
-      {follows.map(({ menteeId }) => (
+    <div className={styles.menteeList}>
+      {follows.map((follow) => (
         <div
-          key={menteeId}
+          key={follow.id}
           className={styles.menteeCard}
-          onClick={() => onMenteeSelect(menteeId)} // Handle mentee selection
+          onClick={() => onMenteeSelect(follow.menteeId)} // Handle mentee card click
         >
           <img
             className={styles.menteeProfilePicture}
-            src={`path/to/mentee/picture/${menteeId}`} // Adjust path as necessary
-            alt="Mentee"
+            src="path/to/mentee/picture" // Replace with actual mentee image source
+            alt={menteeMap[follow.menteeId] || "Mentee"}
             onError={(e) => (e.currentTarget.src = defaultAvatar)}
           />
-          <span className={styles.menteeName}>
-            {menteeMap[menteeId] || "Unknown"}
-          </span>{" "}
-          {/* Display mentee name */}
+          <h4 className={styles.menteeName}>
+            {menteeMap[follow.menteeId] || "Unknown Mentee"}
+          </h4>
         </div>
       ))}
     </div>

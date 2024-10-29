@@ -1,29 +1,11 @@
 import React, { useEffect, useState } from "react";
 import styles from "../styles/MentorDashboard.module.css";
 import MentorProfile from "./MentorProfile";
-import MenteeList from "./MenteeList";
 import { useUserContext } from "./UserContext";
-import { FollowRequest } from "../types";
+import { FollowRequest } from "../types"; // Ensure this type is defined correctly
 import defaultAvatar from "../assets/default-avatar.jpeg";
-import Chat from "./Chat";
-
-interface Follow {
-  id: string;
-  menteeId: string;
-  mentorId: string;
-}
-
-interface Mentee {
-  id: string;
-  name: string;
-  email: string;
-}
-
-interface Mentor {
-  id: string;
-  name: string;
-  email: string;
-}
+import Chat from "./Chat"; // Ensure you are using this component correctly if needed
+import { FaMapMarkerAlt } from "react-icons/fa"; // Import the map icon if needed
 
 const MentorDashboard: React.FC = () => {
   const { userId } = useUserContext();
@@ -31,8 +13,13 @@ const MentorDashboard: React.FC = () => {
     "mentees" | "requests" | "profile"
   >("mentees");
   const [followRequests, setFollowRequests] = useState<FollowRequest[]>([]);
-  const [follows, setFollows] = useState<Follow[]>([]);
-  const [menteeMap, setMenteeMap] = useState<Record<string, string>>({});
+  const [follows, setFollows] = useState<any[]>([]);
+  const [menteeMap, setMenteeMap] = useState<
+    Record<
+      string,
+      { name: string; location: string; companyOrUniversity: string }
+    >
+  >({});
   const [mentorName, setMentorName] = useState<string>("");
   const [selectedMenteeId, setSelectedMenteeId] = useState<string | null>(null);
 
@@ -40,8 +27,8 @@ const MentorDashboard: React.FC = () => {
     // Fetch mentor details
     fetch(`http://localhost:5001/mentors/${userId}`)
       .then((res) => res.json())
-      .then((data: Mentor) => {
-        setMentorName(data.name); // Store the mentor's name
+      .then((data) => {
+        setMentorName(data.name);
       })
       .catch((err) => console.error("Failed to load mentor data", err));
   }, [userId]);
@@ -49,9 +36,27 @@ const MentorDashboard: React.FC = () => {
   useEffect(() => {
     fetch(`http://localhost:5001/mentees`)
       .then((res) => res.json())
-      .then((data: Mentee[]) => {
+      .then((data) => {
         const menteeData = data.reduce(
-          (map, mentee) => ({ ...map, [mentee.id]: mentee.name }),
+          (
+            map: Record<
+              string,
+              { name: string; location: string; companyOrUniversity: string }
+            >,
+            mentee: {
+              id: string;
+              name: string;
+              location: string;
+              companyOrUniversity: string;
+            }
+          ) => {
+            map[mentee.id] = {
+              name: mentee.name,
+              location: mentee.location,
+              companyOrUniversity: mentee.companyOrUniversity,
+            };
+            return map;
+          },
           {}
         );
         setMenteeMap(menteeData);
@@ -64,12 +69,12 @@ const MentorDashboard: React.FC = () => {
       `http://localhost:5001/followRequests?mentorId=${userId}&status=pending`
     )
       .then((res) => res.json())
-      .then((data: FollowRequest[]) => setFollowRequests(data))
+      .then((data) => setFollowRequests(data))
       .catch((err) => console.error("Failed to load follow requests", err));
 
     fetch(`http://localhost:5001/follows?mentorId=${userId}`)
       .then((res) => res.json())
-      .then((data: Follow[]) => setFollows(data))
+      .then((data) => setFollows(data))
       .catch((err) => console.error("Failed to load follows", err));
   }, [userId]);
 
@@ -86,11 +91,10 @@ const MentorDashboard: React.FC = () => {
             prev.filter((req) => req.id !== requestId)
           );
 
-          // Create a new follow object including an id
           const newFollow = {
-            id: `${userId}-${menteeId}`, // Generate a temporary ID or use your backend's response
+            id: `${userId}-${menteeId}`,
             menteeId,
-            mentorId: userId ?? "",
+            mentorId: userId,
           };
 
           setFollows((prev) => [...prev, newFollow]);
@@ -124,18 +128,25 @@ const MentorDashboard: React.FC = () => {
       .catch((err) => console.error("Failed to reject the request", err));
   };
 
+  const handleMenteeSelect = (menteeId: string) => {
+    setSelectedMenteeId(menteeId);
+  };
+
+  const handleBack = () => {
+    setSelectedMenteeId(null);
+  };
+
   return (
     <div className={styles.dashboardContainer}>
       <div className={styles.sidebar}>
         <div className={styles.profileCard}>
           <img
             className={styles.profilePicture}
-            src="path/to/profile/picture"
+            src="path/to/profile/picture" // Replace with the actual profile picture source
             alt="Default Avatar"
             onError={(e) => (e.currentTarget.src = defaultAvatar)}
           />
-          <h3 className={styles.username}>{mentorName || "Loading..."}</h3>{" "}
-          {/* Render mentor name */}
+          <h3 className={styles.username}>{mentorName || "Loading..."}</h3>
         </div>
         <button
           className={styles.sidebarButton}
@@ -158,38 +169,69 @@ const MentorDashboard: React.FC = () => {
       </div>
 
       <div className={styles.content}>
-        {/* {activeTab === "mentees" && <MenteeList follows={follows} />} */}
-        {activeTab === "mentees" && (
-          <div className={styles.menteesContainer}>
-            <MenteeList
-              follows={follows}
-              menteeMap={menteeMap}
-              onMenteeSelect={setSelectedMenteeId} // Pass selected mentee ID
-            />
-            <div className={styles.chatContainer}>
-              {selectedMenteeId ? (
-                <Chat recipientId={selectedMenteeId} /> // Pass selected mentee ID to Chat
-              ) : (
-                <p>Select a mentee to start chatting!</p>
-              )}
-            </div>
+        {selectedMenteeId ? (
+          <div className={styles.chatContainer}>
+            <button onClick={handleBack} className={styles.backButton}>
+              ← Back
+            </button>
+            <Chat recipientId={selectedMenteeId} />
           </div>
-        )}
-        {activeTab === "requests" && (
+        ) : activeTab === "mentees" ? (
+          <div className={styles.chatContainer}>
+            {follows.length > 0 ? (
+              follows.map((mentee) => (
+                <div
+                  key={mentee.id}
+                  className={styles.menteeCard}
+                  onClick={() => handleMenteeSelect(mentee.menteeId)}
+                >
+                  <img
+                    src={mentee.image || defaultAvatar}
+                    alt={menteeMap[mentee.menteeId]?.name || "Unknown Mentee"} // Access name from the updated menteeMap
+                    className={styles.menteeImage}
+                  />
+                  <div className={styles.menteeDetails}>
+                    <h3>{menteeMap[mentee.menteeId]?.name || "Loading..."}</h3>{" "}
+                    {/* Access name */}
+                    <p>
+                      {menteeMap[mentee.menteeId]?.companyOrUniversity ||
+                        "University not specified"}{" "}
+                      {/* Access university */}
+                    </p>
+                    <div className={styles.menteeLocation}>
+                      <FaMapMarkerAlt />
+                      <span>
+                        {menteeMap[mentee.menteeId]?.location ||
+                          "Location not specified"}{" "}
+                        {/* Access location */}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p>No followed mentees to chat with.</p>
+            )}
+          </div>
+        ) : activeTab === "requests" ? (
           <div className={styles.requestsContainer}>
             {followRequests.map((request) => (
               <div key={request.id} className={styles.requestCard}>
                 <img
                   className={styles.menteeProfilePicture}
-                  src="path/to/mentee/picture" // Update with the mentee's image source
+                  src={`http://localhost:5001/mentees/${request.menteeId}/picture`} // Replace with the mentee's image source
                   alt="Mentee"
                   onError={(e) => (e.currentTarget.src = defaultAvatar)}
                 />
                 <span className={styles.requestText}>
-                  {menteeMap[request.menteeId] || "Unknown Mentee"}
+                  {menteeMap[request.menteeId]?.name || "Unknown Mentee"}
+                </span>
+                <span className={styles.requestMessage}>
+                  {request.message || "No message provided."}{" "}
+                  {/* Display message */}
                 </span>
                 <button
-                  className={`${styles.requestButton}`}
+                  className={styles.requestButton}
                   onClick={() => handleAccept(request.id, request.menteeId)}
                 >
                   Accept
@@ -203,9 +245,9 @@ const MentorDashboard: React.FC = () => {
               </div>
             ))}
           </div>
+        ) : (
+          <MentorProfile />
         )}
-
-        {activeTab === "profile" && <MentorProfile />}
       </div>
     </div>
   );

@@ -1,22 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styles from "../styles/MentorProfile.module.css";
 import { useUserContext } from "./UserContext";
 import defaultAvatar from "../assets/default-avatar.jpeg";
 
 interface Profile {
-  picture: string;
+  profilePicture: string; // Renamed to profilePicture
   name: string;
   designation: string;
   company: string;
   location: string;
   email: string;
   skills: string;
+  bio: string;
 }
 
 const MentorProfile: React.FC = () => {
   const { userId } = useUserContext(); // Get the logged-in mentor's ID
   const [profile, setProfile] = useState<Profile | null>(null);
   const [newPicture, setNewPicture] = useState<File | null>(null); // State for the new profile picture
+  const fileInputRef = useRef<HTMLInputElement | null>(null); // Ref for the file input
 
   // Fetch the mentor's profile data using the logged-in user's ID
   useEffect(() => {
@@ -45,7 +47,7 @@ const MentorProfile: React.FC = () => {
       reader.onloadend = () => {
         setProfile((prevProfile) => ({
           ...prevProfile!,
-          picture: reader.result as string,
+          profilePicture: reader.result as string, // Update to profilePicture
         }));
       };
       reader.readAsDataURL(file);
@@ -58,9 +60,9 @@ const MentorProfile: React.FC = () => {
     if (profile) {
       const updatedProfile = {
         ...profile,
-        picture: newPicture
+        profilePicture: newPicture
           ? URL.createObjectURL(newPicture) // Use the uploaded picture URL if available
-          : profile.picture, // Otherwise, keep the existing one
+          : profile.profilePicture, // Otherwise, keep the existing one
       };
 
       fetch(`http://localhost:5001/mentors/${userId}`, {
@@ -81,6 +83,13 @@ const MentorProfile: React.FC = () => {
     }
   };
 
+  // Function to handle click on the avatar to open file input
+  const handleAvatarClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click(); // Programmatically click the hidden file input
+    }
+  };
+
   if (!profile) {
     return <p>Loading profile...</p>; // Show a loading message until the profile loads
   }
@@ -89,9 +98,10 @@ const MentorProfile: React.FC = () => {
     <div className={styles.profileContainer}>
       <div className={styles.profileHeader}>
         <img
-          src={profile.picture || defaultAvatar}
+          src={profile.profilePicture || defaultAvatar} // Updated to profilePicture
           alt={profile.name}
           className={styles.profileImage}
+          onClick={handleAvatarClick} // Handle click to upload a new picture
         />
         <div className={styles.profileInfo}>
           <h1>{profile.name}</h1>
@@ -103,6 +113,14 @@ const MentorProfile: React.FC = () => {
       </div>
 
       <div className={styles.profileDetails}>
+        <h3>Bio</h3>
+        <textarea
+          name="bio" // Name attribute for bio
+          onChange={handleChange} // Handle changes
+          className={styles.bioInput} // You can create a CSS class for styling
+          placeholder="Tell us about yourself..." // Placeholder text
+        />
+
         <h3>Skills</h3>
         <textarea
           name="skills"
@@ -121,8 +139,14 @@ const MentorProfile: React.FC = () => {
           className={styles.inputField}
         />
 
-        <h3>Profile Picture</h3>
-        <input type="file" accept="image/*" onChange={handleFileChange} />
+        {/* Hidden file input for uploading pictures */}
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          style={{ display: "none" }} // Hide the file input
+          ref={fileInputRef} // Assign ref to the input
+        />
 
         <button
           className={styles.saveButton}

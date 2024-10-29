@@ -19,3 +19,11 @@ export interface Follow {
   menteeId: string;
   mentorId: string;
 }
+
+export interface Mentee {
+  id: string;
+  name: string;
+  location?: string;
+  companyOrUniversity?: string;
+  profilePicture?: string;
+}

@@ -11,7 +11,7 @@ const Hero: React.FC = () => {
           Book 1:1 calls with
           <br /> the world's top mentors.
         </h1>
-        <Link to="/register" className="cta-button">
+        <Link to="/login" className="cta-button">
           {" "}
           {/* Use Link for navigation */}
           Become a Member

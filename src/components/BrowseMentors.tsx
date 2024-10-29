@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from "react";
-import styles from "../styles/BrowseMentors.module.css"; // Create a CSS file for styling
+import React, { useContext, useEffect, useState } from "react";
+import styles from "../styles/BrowseMentors.module.css";
 import defaultAvatar from "../assets/default-avatar.jpeg";
 import { FaMapMarkerAlt } from "react-icons/fa";
+import FollowRequestModal from "./FollowRequestModal";
+import { useUserContext } from "./UserContext"; // Import the hook
 
 interface Mentor {
   id: string;
@@ -14,7 +16,11 @@ interface Mentor {
 const BrowseMentors: React.FC = () => {
   const [mentors, setMentors] = useState<Mentor[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [followedMentors, setFollowedMentors] = useState<string[]>([]); // To track followed mentors
+  const [showModal, setShowModal] = useState(false);
+  const [selectedMentor, setSelectedMentor] = useState<Mentor | null>(null);
+
+  // Use the useUserContext hook to get the logged-in user's ID
+  const { userId } = useUserContext(); // Correct usage
 
   useEffect(() => {
     const fetchMentors = async () => {
@@ -42,13 +48,37 @@ const BrowseMentors: React.FC = () => {
     );
   });
 
-  const handleFollowToggle = (mentorId: string) => {
-    setFollowedMentors(
-      (prev) =>
-        prev.includes(mentorId)
-          ? prev.filter((id) => id !== mentorId) // Unfollow if already followed
-          : [...prev, mentorId] // Follow if not already followed
-    );
+  const handleFollow = (mentor: Mentor) => {
+    setSelectedMentor(mentor);
+    setShowModal(true);
+  };
+
+  const sendFollowRequest = async (message: string) => {
+    if (!selectedMentor) return;
+
+    try {
+      const res = await fetch(`http://localhost:5001/followRequests`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          menteeId: userId, // Use userId from context
+          mentorId: selectedMentor.id,
+          status: "pending",
+          message,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Failed to send follow request.");
+
+      alert("Follow request sent successfully!");
+      setShowModal(false);
+      setSelectedMentor(null);
+    } catch (error) {
+      console.error(error);
+      alert("Failed to send follow request. Please try again.");
+    }
   };
 
   return (
@@ -78,12 +108,10 @@ const BrowseMentors: React.FC = () => {
                   <span>{mentor.location}</span>
                 </div>
                 <button
-                  onClick={() => handleFollowToggle(mentor.id)}
-                  className={`${styles.followButton} ${
-                    followedMentors.includes(mentor.id) ? styles.followed : ""
-                  }`}
+                  className={styles.followButton}
+                  onClick={() => handleFollow(mentor)}
                 >
-                  {followedMentors.includes(mentor.id) ? "Unfollow" : "Follow"}
+                  Follow
                 </button>
               </div>
             </div>
@@ -92,6 +120,15 @@ const BrowseMentors: React.FC = () => {
           <p>No mentors found.</p>
         )}
       </div>
+
+      {/* Follow Request Modal */}
+      {showModal && selectedMentor && (
+        <FollowRequestModal
+          mentorName={selectedMentor.name}
+          onSend={sendFollowRequest}
+          onClose={() => setShowModal(false)}
+        />
+      )}
     </div>
   );
 };

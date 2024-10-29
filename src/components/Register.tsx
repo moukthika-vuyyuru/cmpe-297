@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styles from "../styles/Register.module.css";
-import defaultAvatar from "../assets/default-avatar.jpeg";
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
@@ -15,33 +14,18 @@ const Register: React.FC = () => {
     role: initialRole,
     name: "",
     email: "",
-    specialty: "",
-    designation: "",
-    company: "",
+    companyOrUniversity: "", // Updated field name for mentee
     location: "",
     skills: "",
+    specialty: "", // Added for mentor
+    designation: "", // Added for mentor
+    company: "", // Added for mentor
   });
-
-  const [profilePicture, setProfilePicture] = useState<File | null>(null);
-  const [picturePreview, setPicturePreview] = useState<string | null>(null);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setProfilePicture(file);
-      const reader = new FileReader();
-      reader.onloadend = () => setPicturePreview(reader.result as string);
-      reader.readAsDataURL(file);
-    } else {
-      setProfilePicture(null);
-      setPicturePreview(null);
-    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -65,9 +49,10 @@ const Register: React.FC = () => {
         id: userData.id,
         name: formData.name,
         email: formData.email,
-        profilePicture: profilePicture
-          ? URL.createObjectURL(profilePicture)
-          : defaultAvatar,
+        location: formData.location,
+        skills: formData.skills.split(",").map((skill) => skill.trim()),
+        profilePicture: "",
+        bio: "",
       };
 
       // Save to mentees or mentors based on the role
@@ -77,8 +62,6 @@ const Register: React.FC = () => {
           specialty: formData.specialty,
           designation: formData.designation,
           company: formData.company,
-          location: formData.location,
-          skills: formData.skills.split(",").map((skill) => skill.trim()), // Split skills into an array
         };
 
         await fetch("http://localhost:5001/mentors", {
@@ -87,10 +70,16 @@ const Register: React.FC = () => {
           body: JSON.stringify(mentorData),
         });
       } else {
+        // For mentees, use companyOrUniversity field
+        const menteeData = {
+          ...commonData,
+          companyOrUniversity: formData.companyOrUniversity,
+        };
+
         await fetch("http://localhost:5001/mentees", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(commonData),
+          body: JSON.stringify(menteeData),
         });
       }
 
@@ -149,18 +138,9 @@ const Register: React.FC = () => {
             className={styles.inputField}
             required
           />
-          <input type="file" accept="image/*" onChange={handleFileChange} />
-          {picturePreview && (
-            <img
-              src={picturePreview}
-              alt="Profile Preview"
-              className={styles.profilePreview}
-            />
-          )}
 
           {formData.role === "mentor" && (
             <>
-              <div className={styles.gap}></div> {/* Add a gap here */}
               <input
                 type="text"
                 name="specialty"
@@ -181,6 +161,35 @@ const Register: React.FC = () => {
                 type="text"
                 name="company"
                 placeholder="Company"
+                onChange={handleChange}
+                className={styles.inputField}
+                required
+              />
+              <input
+                type="text"
+                name="location"
+                placeholder="Location"
+                onChange={handleChange}
+                className={styles.inputField}
+                required
+              />
+              <input
+                type="text"
+                name="skills"
+                placeholder="Skills (comma-separated)"
+                onChange={handleChange}
+                className={styles.inputField}
+                required
+              />
+            </>
+          )}
+
+          {formData.role === "mentee" && (
+            <>
+              <input
+                type="text"
+                name="companyOrUniversity"
+                placeholder="Company or University"
                 onChange={handleChange}
                 className={styles.inputField}
                 required

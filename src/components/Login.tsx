@@ -34,7 +34,6 @@ const Login: React.FC = () => {
         );
         if (user) {
           login(user.id, user.role, user.username);
-          alert("Login successful!");
           navigate(
             user.role === "mentor" ? "/mentor-dashboard" : "/mentee-dashboard"
           );

@@ -1,291 +1,389 @@
-.container {
+.dashboardContainer {
     display: flex;
-    flex-direction: column;
     height: 100vh;
-    background-color: #f9f9f9;
-    /* Adjust as needed */
+    background: linear-gradient(to right, #f0f4f8, #e8eff1);
 }
 
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 20px;
-    background-color: #007bff;
-    /* Navbar color */
-    color: rgb(34, 37, 99);
-    /* Text color */
-}
-
-.logo {
-    font-size: 24px;
-    font-weight: bold;
-}
-
-.navButton {
-    background: none;
-    border: none;
+.sidebar {
+    width: 300px;
+    background-color: #17181a;
+    /* Dark color for sidebar */
     color: white;
-    /* Text color */
-    font-size: 18px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.signoutButton {
-    background: none;
-    border: none;
-    color: white;
-    /* Text color */
-    font-size: 18px;
-    cursor: pointer;
-}
-
-.signoutButton {
-    font-weight: bold;
-    /* Bold for sign out button */
-}
-
-.banner {
-    flex: 1;
     padding: 20px;
+    font-size: 56px;
+}
+
+.profileCard {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
     align-items: center;
-    background-color: #f0f0f0;
-    /* Light background */
-    text-align: center;
-    max-height: 300px;
-}
-
-.browseButton {
-    padding: 10px 20px;
-    background-color: #007bff;
-    /* Button color */
-    color: white;
-    /* Text color */
-    border: none;
-    border-radius: 5px;
-    /* Rounded corners */
-    cursor: pointer;
-    font-size: 16px;
-    /* Increase font size */
-}
-
-.browseButton:hover {
-    background-color: #0056b3;
-    /* Darker button color on hover */
-}
-
-.tabs {
-    display: flex;
-    justify-content: center;
     margin-bottom: 20px;
 }
 
-.tab {
-    padding: 10px 20px;
-    cursor: pointer;
-    border: none;
+.profilePicture {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.sidebarButton {
+    width: 100%;
+    padding: 10px;
     background: none;
-    margin: 0 10px;
-    color: #007bff;
-    /* Tab text color */
-    font-weight: bold;
-    /* Make text bold */
-    font-size: 18px;
-    /* Increase font size */
+    color: white;
+    border: none;
+    text-align: left;
+    cursor: pointer;
 }
 
-.active {
-    border-bottom: 2px solid #007bff;
-    /* Underline color for active tab */
-    color: #007bff;
-    /* Active tab color */
+.sidebarButton:hover {
+    background-color: #7289da;
+    /* Light blue on hover */
 }
 
-.tabContent {
-    flex: 1;
+.signoutButton {
+    width: 100%;
+    padding: 10px;
+    background-color: #ff4757;
+    /* Red color for logout */
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.content {
+    flex-grow: 1;
     padding: 20px;
-    /* Add padding for tab content */
+    background-color: transparent;
+    /* White background for content */
+}
+
+.banner {
+    background-color: #f9f9f9;
+    /* Light background color */
+    padding: 40px 20px;
+    /* Padding for spacing */
+    text-align: center;
+    /* Center align the text */
+    border-radius: 10px;
+    /* Rounded corners */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow for depth */
+    margin-bottom: 20px;
+    /* Space below the hero section */
 }
 
 .mentorList {
     display: flex;
     flex-direction: column;
-    /* Stack mentor cards */
-    gap: 15px;
-    /* Space between mentor cards */
+    gap: 10px;
 }
 
+
 .mentorCard {
-    display: flex;
-    border: 1px solid #ddd;
-    /* Card border */
-    border-radius: 8px;
-    /* Rounded corners */
-    padding: 10px;
-    /* Padding inside card */
-    align-items: center;
-    /* Center items vertically */
-    background-color: white;
-    /* Card background */
+    background: #fff;
+    /* White background for contrast */
+    border-radius: 12px;
+    /* More rounded corners */
+    padding: 15px;
+    /* More padding for comfort */
+    width: calc(25% - 20px);
+    /* Adjust to fit your layout */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow */
+    transition: transform 0.2s;
+    /* Animation for hover effect */
+}
+
+.mentorCard:hover {
+    transform: translateY(-5px);
+    /* Lift effect on hover */
 }
 
 .mentorImage {
-    width: 80px;
-    /* Set image size */
-    height: 80px;
-    /* Set image size */
-    border-radius: 50%;
-    /* Round image */
-    margin-right: 15px;
-    /* Space between image and text */
+    width: 90%;
+    /* Full width for the image */
+    height: 200px;
+    /* Fixed height for uniformity */
+    border-radius: 12px;
+    /* Consistent border radius */
+    object-fit: cover;
+    /* Cover to fill the area while preserving aspect ratio */
+    display: block;
+    /* Ensure the image is a block element */
+    margin: 0 auto;
+    /* Center the image horizontally */
 }
 
 .mentorDetails {
-    flex: 1;
-    /* Take remaining space */
+    margin-top: 10px;
+    /* Spacing from the image */
+}
+
+.mentorName {
+    font-size: 18px;
+    /* Slightly larger name */
+    font-weight: bold;
+    /* Bold for emphasis */
 }
 
 .mentorLocation {
     display: flex;
+    /* Flexbox for alignment */
     align-items: center;
-    /* Center items vertically */
-    color: gray;
-    /* Color for location */
+    /* Center vertically */
+    margin-top: 5px;
+    /* Spacing from the name */
 }
 
-.messageButton,
+.mentorLocation span {
+    margin-left: 5px;
+    /* Spacing from the icon */
+    color: #666;
+    /* Lighter color for less emphasis */
+}
+
 .followButton {
-    padding: 5px 10px;
     background-color: #007bff;
-    /* Button color */
+    /* Primary color */
     color: white;
-    /* Text color */
+    /* White text */
     border: none;
+    /* No border for a cleaner look */
+    padding: 10px 15px;
+    /* Padding for button */
     border-radius: 5px;
     /* Rounded corners */
     cursor: pointer;
+    /* Pointer cursor on hover */
+    margin-top: 10px;
+    /* Space above button */
     font-size: 14px;
-    /* Increase font size */
+    /* Slightly smaller font */
+    transition: background-color 0.3s, transform 0.2s;
+    /* Smooth transitions */
 }
 
-.messageButton:hover,
 .followButton:hover {
     background-color: #0056b3;
-    /* Darker color on hover */
+    /* Darker shade on hover */
+    transform: translateY(-2px);
+    /* Lift effect on hover */
 }
 
-.inputField {
-    width: 100%;
-    /* Full width for input field */
+.backButton {
+    font-size: 24px;
+    /* Adjust the size as needed */
+    cursor: pointer;
+    background: none;
+    /* Remove default button styles */
+    border: none;
+    /* Remove border */
+    color: #007bff;
+    /* Primary color */
     padding: 10px;
-    /* Increase padding for better touch targets */
-    font-size: 16px;
-    /* Increase font size */
+    /* Add some padding */
     margin-bottom: 20px;
-    /* Space below input */
-    border: 1px solid #ccc;
-    /* Border for input */
-    border-radius: 5px;
-    /* Rounded corners */
+    /* Space below */
+    transition: color 0.3s;
 }
 
+.backButton:hover {
+    color: #0056b3;
+    /* Darker shade on hover */
+}
 
-.recommendedCarousel {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    position: relative;
+.pendingStatus {
+    color: orange;
+    /* Or any color that fits your design */
+    font-weight: bold;
+    margin-top: 5px;
+    /* Adds some space above the status text */
+}
+
+.browseButton {
+    background-color: #007bff;
+    /* Primary button color */
+    color: white;
+    /* White text color */
+    padding: 10px 20px;
+    /* Padding for button */
+    border: none;
+    /* No border */
+    border-radius: 5px;
+    /* Rounded corners for button */
+    cursor: pointer;
+    /* Pointer cursor on hover */
+    font-size: 1rem;
+    /* Font size for button */
+    transition: background-color 0.3s ease;
+    /* Transition for hover effect */
+}
+
+.browseButton:hover {
+    background-color: #0056b3;
+    /* Darker shade on hover */
+}
+
+.recommendedSection {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f1f1f1;
+    /* Light background color for the section */
+    border-radius: 10px;
+    /* Rounded corners for the section */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow for depth */
 }
 
 .recommendedMentors {
     display: flex;
-    /* Enable flexbox */
-    justify-content: space-around;
-    /* Distribute space evenly */
-    align-items: center;
-    /* Center items vertically */
     overflow-x: auto;
-    /* Allow horizontal scrolling if needed */
+    /* Allow horizontal scrolling if necessary */
+    gap: 20px;
     padding: 10px 0;
-    /* Add some padding */
+    /* Padding for spacing */
 }
 
 .recommendedMentorCard {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    background-color: #fff;
-    border-radius: 8px;
-    padding: 16px;
+    background-color: #e9ecef;
+    /* Light gray for mentor cards */
+    border-radius: 12px;
+    /* More rounded corners for cards */
+    padding: 15px;
+    /* More padding for comfort */
+    flex: 0 0 auto;
+    /* Prevent flex items from shrinking */
+    min-width: 250px;
+    /* Increased minimum width for mentor cards */
+    max-width: 350px;
+    /* Optional: Set a max width for better layout control */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: 10px;
-    /* Adjust margin for spacing between cards */
-    min-width: 300px;
-    /* Set a minimum width for the cards */
-    min-height: 250px;
+    /* Subtle shadow */
+    transition: transform 0.2s;
+    /* Animation for hover effect */
+}
+
+.recommendedMentorCard:hover {
+    transform: translateY(-5px);
+    /* Lift effect on hover */
 }
 
 .recommendedMentorImage {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    margin-bottom: 10px;
+    width: 100%;
+    /* Full width for the image */
+    height: 120px;
+    /* Fixed height for uniformity */
+    border-radius: 12px;
+    /* Consistent border radius */
+    object-fit: cover;
+    /* Cover to fill the area while preserving aspect ratio */
 }
 
-.inquiriesContainer {
+.recommendedMentorDetails {
+    margin-top: 10px;
+    /* Spacing from the image */
+    text-align: center;
+    /* Center align the text */
+}
+
+.recommendedMentorName {
+    font-size: 18px;
+    /* Slightly larger name */
+    font-weight: bold;
+    /* Bold for emphasis */
+    color: #333;
+    /* Darker text color */
+}
+
+.recommendedMentorSpecialty {
+    font-size: 14px;
+    /* Medium font size for specialty */
+    color: #666;
+    /* Lighter text color */
+    margin: 5px 0;
+    /* Space above and below */
+}
+
+.recommendedMentorLocation {
     display: flex;
-    justify-content: space-between;
+    /* Flexbox for alignment */
+    justify-content: center;
+    /* Center horizontally */
+    align-items: center;
+    /* Center vertically */
+    color: #999;
+    /* Lighter color for less emphasis */
 }
 
-.mentorList {
-    flex: 1;
-    /* This will take most of the space */
-    margin-right: 20px;
-    /* Space between mentor list and chat */
+.heroSection {
+    background: linear-gradient(135deg, #ff7e5f, #feb47b);
+    /* Gradient background */
+    color: #fff;
+    /* White text for contrast */
+    padding: 50px 20px;
+    /* More padding for a spacious feel */
+    text-align: center;
+    /* Centering text */
+    border-radius: 12px;
+    /* Rounded corners for hero section */
+    position: relative;
+    /* For positioning decorative elements */
+    overflow: hidden;
+    /* Ensure content doesn't overflow */
 }
 
-.chatContainer {
-    flex: 2;
-    /* This will take more space for the chat */
-    background-color: #f9f9f9;
-    /* Add a background color */
-    padding: 20px;
-    /* Add some padding */
-    border-radius: 8px;
-    /* Rounded corners */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    /* Light shadow for depth */
+.heroSection h1 {
+    font-size: 2.5em;
+    /* Larger font size for the main heading */
+    margin-bottom: 20px;
+    /* Spacing below the heading */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    /* Subtle shadow for better readability */
 }
 
-.mentorCard {
-    display: flex;
-    cursor: pointer;
-    /* Cursor indicates clickable */
-    padding: 10px;
-    border: 1px solid #ccc;
-    /* Light border */
+.heroSection p {
+    font-size: 1.2em;
+    /* Slightly larger font size for description */
+    margin-bottom: 30px;
+    /* Spacing below the paragraph */
+    color: #f7f7f7;
+    /* Light color for description text */
+}
+
+.heroButton {
+    background-color: #4CAF50;
+    /* Vibrant green for buttons */
+    color: #fff;
+    /* White text on buttons */
+    padding: 15px 30px;
+    /* Button padding */
+    border: none;
+    /* Remove default border */
     border-radius: 5px;
-    /* Rounded corners */
-    margin-bottom: 10px;
-    /* Space between cards */
+    /* Rounded corners for buttons */
+    cursor: pointer;
+    /* Pointer cursor on hover */
     transition: background-color 0.3s;
     /* Smooth transition */
 }
 
-.mentorCard:hover {
-    background-color: #f1f1f1;
-    /* Highlight on hover */
+.heroButton:hover {
+    background-color: #45a049;
+    /* Darker green on hover */
 }
 
-.chatBox {
-    /* Style for the chat area */
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 5px;
+/* Optional decorative elements */
+.heroSection::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    /* Light overlay for depth */
+    border-radius: 12px;
+    z-index: 1;
+    /* Place behind the text */
 }

@@ -1,28 +1,34 @@
 .container {
   display: flex;
   height: 100vh;
+  background-color: #f5f6fa;
   /* Full height */
 }
 
 .banner {
   flex: 1;
-  /* Take 1 part of the available width */
-  padding: 20px;
-  background-color: #f9f9f9;
-  /* Adjust as needed */
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-color: #eef1f6;
+}
+
+.bannerImage {
+  width: 80%;
+  height: auto;
 }
 
 .loginSection {
   flex: 1;
   /* Take another part of the available width */
-  padding: 50px;
+  padding: 60px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+
+.loginSection h2 {
+  text-align: left;
 }
 
 .tabs {
@@ -107,11 +113,4 @@
 .signupButton:hover {
   background-color: #0056b3;
   /* Darker color on hover */
-}
-
-.bannerImage {
-  width: 100%;
-  /* Make the image responsive */
-  height: auto;
-  /* Maintain aspect ratio */
 }
