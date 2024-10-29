@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "../styles/BrowseMentors.module.css";
 import defaultAvatar from "../assets/default-avatar.jpeg";
 import { FaMapMarkerAlt } from "react-icons/fa";

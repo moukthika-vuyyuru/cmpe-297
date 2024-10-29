@@ -20,7 +20,7 @@ interface Mentor {
 }
 
 const MenteeDashboard: React.FC = () => {
-  const { userId: menteeId, name: menteeName, logout } = useUserContext();
+  const { userId: menteeId, name: menteeName } = useUserContext();
   const [mentors, setMentors] = useState<Mentor[]>([]);
   const [pendingRequests, setPendingRequests] = useState<FollowRequest[]>([]);
   const [followedMentors, setFollowedMentors] = useState<Mentor[]>([]);
@@ -120,12 +120,6 @@ const MenteeDashboard: React.FC = () => {
     }
   };
 
-  const handleLogout = () => {
-    logout();
-    alert("Logged out successfully!");
-    navigate("/"); // Redirect after logout
-  };
-
   const handleMentorSelect = (mentor: Mentor) => {
     setSelectedMentor(mentor); // Set the selected mentor
   };
@@ -167,10 +161,7 @@ const MenteeDashboard: React.FC = () => {
           className={styles.sidebarButton}
           onClick={() => setActiveTab("inquiries")}
         >
-          Chat
-        </button>
-        <button className={styles.signoutButton} onClick={handleLogout}>
-          Sign Out
+          Your Mentors
         </button>
       </div>
 
@@ -259,6 +250,7 @@ const MenteeDashboard: React.FC = () => {
                                 <FaMapMarkerAlt />
                                 <span>{mentor.location}</span>
                               </div>
+                              <br />
                               <p className={styles.pendingStatus}>
                                 Request is pending
                               </p>

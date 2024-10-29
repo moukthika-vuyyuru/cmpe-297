@@ -214,34 +214,48 @@ const MentorDashboard: React.FC = () => {
             )}
           </div>
         ) : activeTab === "requests" ? (
+          // Inside the `requests` tab rendering
           <div className={styles.requestsContainer}>
             {followRequests.map((request) => (
               <div key={request.id} className={styles.requestCard}>
                 <img
                   className={styles.menteeProfilePicture}
-                  src={`http://localhost:5001/mentees/${request.menteeId}/picture`} // Replace with the mentee's image source
+                  src={`http://localhost:5001/mentees/${request.menteeId}/picture`}
                   alt="Mentee"
                   onError={(e) => (e.currentTarget.src = defaultAvatar)}
                 />
-                <span className={styles.requestText}>
-                  {menteeMap[request.menteeId]?.name || "Unknown Mentee"}
-                </span>
-                <span className={styles.requestMessage}>
-                  {request.message || "No message provided."}{" "}
-                  {/* Display message */}
-                </span>
-                <button
-                  className={styles.requestButton}
-                  onClick={() => handleAccept(request.id, request.menteeId)}
-                >
-                  Accept
-                </button>
-                <button
-                  className={`${styles.rejectButton} ${styles.requestButton}`}
-                  onClick={() => handleReject(request.id)}
-                >
-                  Reject
-                </button>
+                <div className={styles.menteeDetails}>
+                  <h3 className={styles.menteeName}>
+                    {menteeMap[request.menteeId]?.name || "Unknown Mentee"}
+                  </h3>
+                  <p className={styles.university}>
+                    {menteeMap[request.menteeId]?.companyOrUniversity || "N/A"}
+                  </p>
+                  <div className={styles.location}>
+                    <FaMapMarkerAlt className={styles.icon} />
+                    <span>
+                      {menteeMap[request.menteeId]?.location ||
+                        "Location not specified"}
+                    </span>
+                  </div>
+                  <p className={styles.requestMessage}>
+                    "{request.message || "No message provided."}"
+                  </p>
+                </div>
+                <div className={styles.buttonGroup}>
+                  <button
+                    className={styles.acceptButton}
+                    onClick={() => handleAccept(request.id, request.menteeId)}
+                  >
+                    Accept
+                  </button>
+                  <button
+                    className={styles.rejectButton}
+                    onClick={() => handleReject(request.id)}
+                  >
+                    Reject
+                  </button>
+                </div>
               </div>
             ))}
           </div>

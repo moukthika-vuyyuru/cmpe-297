@@ -1,45 +1,90 @@
 .dashboardContainer {
     display: flex;
-    height: 100vh;
-    background: linear-gradient(to right, #f0f4f8, #e8eff1);
+    padding: 20px;
+    background-color: #f9f9f9;
+    /* Light background for contrast */
+    min-height: 100vh;
+    font-family: 'Arial', sans-serif;
+    /* Set a clean font */
 }
 
 .sidebar {
-    width: 300px;
-    background-color: #17181a;
-    /* Dark color for sidebar */
-    color: white;
+    width: 250px;
+    background-color: #2c3e50;
+    /* Dark sidebar */
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.15);
+    /* Enhanced shadow */
+    border-radius: 10px;
+    /* Softer corners */
     padding: 20px;
-    font-size: 56px;
+    margin-right: 20px;
 }
 
 .profileCard {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+    background-color: #34495e;
+    /* Slightly lighter for the profile card */
+    border-radius: 10px;
+    /* Softer corners */
+    padding: 15px;
+    /* More padding */
+    color: white;
+    /* White text for better contrast */
+    transition: transform 0.2s;
+    /* Add a hover effect */
+}
+
+.profileCard:hover {
+    transform: scale(1.02);
+    /* Slight scale on hover */
 }
 
 .profilePicture {
-    width: 50px;
-    height: 50px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
-    margin-right: 10px;
+    margin-bottom: 10px;
+    border: 3px solid #e67e22;
+}
+
+.username {
+    font-size: 20px;
+    /* Slightly larger font size */
+    font-weight: bold;
+    text-align: center;
+    /* Center align text */
 }
 
 .sidebarButton {
     width: 100%;
-    padding: 10px;
-    background: none;
+    padding: 12px;
+    /* Increased padding for buttons */
+    background-color: #e67e22;
+    /* Orange button */
     color: white;
     border: none;
-    text-align: left;
+    border-radius: 5px;
     cursor: pointer;
+    margin-bottom: 15px;
+    /* Increased margin */
+    text-align: center;
+    font-size: 16px;
+    /* Larger font for buttons */
+    transition: background-color 0.3s, transform 0.2s;
+    /* Transition effects */
 }
 
 .sidebarButton:hover {
-    background-color: #7289da;
-    /* Light blue on hover */
+    background-color: #d35400;
+    /* Darker orange on hover */
+    transform: scale(1.02);
+    /* Scale effect on hover */
 }
+
+
 
 .signoutButton {
     width: 100%;
@@ -52,10 +97,12 @@
 }
 
 .content {
-    flex-grow: 1;
+    flex: 1;
+    background-color: #ecf0f1;
+    /* Light content area */
     padding: 20px;
-    background-color: transparent;
-    /* White background for content */
+    border-radius: 10px;
+    /* Softer corners */
 }
 
 .banner {
@@ -75,8 +122,10 @@
 
 .mentorList {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 10px;
+    background-color: #ecf0f1;
+    border-radius: 10px;
 }
 
 

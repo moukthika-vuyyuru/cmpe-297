@@ -27,10 +27,8 @@ const App: React.FC = () => {
             <Route path="/mentor-dashboard" element={<MentorDashboard />} />
             <Route path="/mentor-timeline" element={<MentorTimeline />} />
             <Route path="/browse-mentors" element={<BrowseMentors />} />
+            <Route path="/mentee-dashboard" element={<MenteeDashboard />} />
           </Route>
-
-          {/* Render MenteeDashboard without MainLayout */}
-          <Route path="/mentee-dashboard" element={<MenteeDashboard />} />
 
           {/* Login and Register are separate pages */}
           <Route path="/login" element={<Login />} />
