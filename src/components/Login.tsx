@@ -1,8 +1,9 @@
-// Login.tsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "./UserContext";
 import styles from "../styles/Login.module.css";
+import { toast, ToastContainer } from "react-toastify"; // Import Toast functions
+import "react-toastify/dist/ReactToastify.css"; // Import Toast CSS
 
 interface User {
   id: string;
@@ -27,25 +28,40 @@ const Login: React.FC = () => {
       .then((res) => res.json())
       .then((users: User[]) => {
         const user = users.find(
-          (u: User) =>
-            u.username === username &&
-            u.password === password &&
-            u.role === selectedRole
+          (u: User) => u.username === username && u.role === selectedRole
         );
-        if (user) {
-          login(user.id, user.role, user.username);
-          navigate(
-            user.role === "mentor" ? "/mentor-dashboard" : "/mentee-dashboard"
-          );
-        } else {
-          alert("Invalid credentials or role.");
+
+        if (!user) {
+          toast.error("User does not exist."); // Show error if user doesn't exist
+          return;
         }
+
+        if (user.password !== password) {
+          toast.error("Incorrect password."); // Show error if password is wrong
+          return;
+        }
+
+        login(user.id, user.role, user.username);
+        navigate(
+          user.role === "mentor" ? "/mentor-dashboard" : "/mentee-dashboard"
+        );
       })
-      .catch((err) => console.error("Login failed", err));
+      .catch((err) => {
+        console.error("Login failed", err);
+        toast.error("An error occurred during login."); // General error handling
+      });
   };
 
   return (
     <div className={styles.container}>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        closeOnClick
+        pauseOnHover
+        draggable
+      />
       <div className={styles.banner}>
         <img
           src={require("../assets/MC.webp")}

@@ -5,10 +5,11 @@ import styles from "../styles/Chat.module.css";
 
 interface ChatProps {
   recipientId: string;
-  recipientName: string; // Add recipientName as a prop
+  recipientName: string;
+  onBack: () => void; // New prop to handle back button click
 }
 
-const Chat: React.FC<ChatProps> = ({ recipientId, recipientName }) => {
+const Chat: React.FC<ChatProps> = ({ recipientId, recipientName, onBack }) => {
   const { userId: contextUserId } = useUserContext();
   const senderId = contextUserId || localStorage.getItem("userId");
 
@@ -64,7 +65,6 @@ const Chat: React.FC<ChatProps> = ({ recipientId, recipientName }) => {
     }
   };
 
-  // Add a keydown event handler
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       sendMessage();
@@ -83,8 +83,11 @@ const Chat: React.FC<ChatProps> = ({ recipientId, recipientName }) => {
 
   return (
     <div className={styles.chatContainer}>
-      {/* Chat Header */}
+      {/* Chat Header with Back Button */}
       <div className={styles.chatHeader}>
+        <button onClick={onBack} className={styles.backButton}>
+          ← Back
+        </button>
         <h3>{recipientName}</h3>
       </div>
       <div className={styles.messages}>
@@ -107,7 +110,7 @@ const Chat: React.FC<ChatProps> = ({ recipientId, recipientName }) => {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleKeyDown} // Add keyDown event handler here
+          onKeyDown={handleKeyDown}
           placeholder="Type your message..."
           className={styles.input}
         />

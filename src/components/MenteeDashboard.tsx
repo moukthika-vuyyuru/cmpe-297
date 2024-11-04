@@ -1,5 +1,3 @@
-// MenteeDashboard.tsx
-
 import React, { useEffect, useState } from "react";
 import { useUserContext } from "./UserContext";
 import { useNavigate } from "react-router-dom";
@@ -10,14 +8,10 @@ import { FaMapMarkerAlt } from "react-icons/fa";
 import Chat from "./Chat";
 import UserProfile from "./UserProfile";
 import FollowRequestModal from "./FollowRequestModal";
-
-interface Mentor {
-  id: string;
-  name: string;
-  specialty: string;
-  image: string;
-  location: string;
-}
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import MentorCard from "./MentorCard";
+import { Mentor } from "../types";
 
 const MenteeDashboard: React.FC = () => {
   const { userId: menteeId, name: menteeName } = useUserContext();
@@ -25,11 +19,10 @@ const MenteeDashboard: React.FC = () => {
   const [pendingRequests, setPendingRequests] = useState<FollowRequest[]>([]);
   const [followedMentors, setFollowedMentors] = useState<Mentor[]>([]);
   const [activeTab, setActiveTab] = useState<
-    "home" | "applications" | "inquiries"
+    "home" | "applications" | "inquiries" | "profile"
   >("home");
   const [recommendedMentors, setRecommendedMentors] = useState<Mentor[]>([]);
   const [selectedMentor, setSelectedMentor] = useState<Mentor | null>(null);
-  const [showUserProfile, setShowUserProfile] = useState<boolean>(false);
   const [selectedMentorForRequest, setSelectedMentorForRequest] =
     useState<Mentor | null>(null);
   const [showModal, setShowModal] = useState(false);
@@ -50,22 +43,23 @@ const MenteeDashboard: React.FC = () => {
     fetchMentors();
   }, []);
 
+  // Define fetchPendingRequests here
+  const fetchPendingRequests = async () => {
+    if (!menteeId) return;
+
+    try {
+      const res = await fetch(
+        `http://localhost:5001/followRequests?menteeId=${menteeId}`
+      );
+      const data: FollowRequest[] = await res.json();
+      setPendingRequests(data);
+    } catch (err) {
+      console.error("Failed to load follow requests", err);
+    }
+  };
+
   useEffect(() => {
-    const fetchPendingRequests = async () => {
-      if (!menteeId) return;
-
-      try {
-        const res = await fetch(
-          `http://localhost:5001/followRequests?menteeId=${menteeId}`
-        );
-        const data: FollowRequest[] = await res.json();
-        setPendingRequests(data);
-      } catch (err) {
-        console.error("Failed to load follow requests", err);
-      }
-    };
-
-    fetchPendingRequests();
+    fetchPendingRequests(); // Call on component mount
   }, [menteeId]);
 
   useEffect(() => {
@@ -111,12 +105,20 @@ const MenteeDashboard: React.FC = () => {
 
       if (!res.ok) throw new Error("Failed to send follow request.");
 
-      alert("Follow request sent successfully!");
+      toast.success("Follow request sent successfully!");
       setShowModal(false);
       setSelectedMentorForRequest(null);
+
+      // Refresh the pending requests
+      await fetchPendingRequests(); // Now correctly calls the defined function
+
+      // Remove the followed mentor from the recommended list
+      setRecommendedMentors((prev) =>
+        prev.filter((mentor) => mentor.id !== selectedMentorForRequest.id)
+      );
     } catch (error) {
       console.error(error);
-      alert("Failed to send follow request. Please try again.");
+      toast.error("Failed to send follow request. Please try again.");
     }
   };
 
@@ -128,8 +130,32 @@ const MenteeDashboard: React.FC = () => {
     setSelectedMentor(null); // Reset the selected mentor
   };
 
+  const cancelFollowRequest = async (requestId: string) => {
+    try {
+      const res = await fetch(
+        `http://localhost:5001/followRequests/${requestId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!res.ok) throw new Error("Failed to cancel follow request.");
+
+      toast.success("Follow request canceled successfully!");
+
+      // Update the state to remove the canceled request
+      setPendingRequests((prev) =>
+        prev.filter((request) => request.id !== requestId)
+      );
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to cancel follow request. Please try again.");
+    }
+  };
+
   return (
     <div className={styles.dashboardContainer}>
+      <ToastContainer /> {/* Toast notifications container */}
       <div className={styles.sidebar}>
         <div className={styles.profileCard}>
           <img
@@ -160,158 +186,136 @@ const MenteeDashboard: React.FC = () => {
         </button>
         <button
           className={styles.sidebarButton}
-          onClick={() => setShowUserProfile(!showUserProfile)}
+          onClick={() => setActiveTab("profile")}
         >
           Profile
         </button>
       </div>
-
       <div className={styles.content}>
-        {showUserProfile ? (
-          <UserProfile />
-        ) : (
-          <>
-            {activeTab === "home" && (
-              <div className={styles.banner}>
-                <h2 className={styles.heroTitle}>Welcome, {menteeName}!</h2>
-                <p className={styles.heroSubtitle}>
-                  Start connecting with mentors and take your career to the next
-                  level!
-                </p>
-                <button
-                  className={styles.browseButton}
-                  onClick={() => navigate("/browse-mentors")}
-                >
-                  Browse Mentors
-                </button>
+        {activeTab === "profile" && <UserProfile />}{" "}
+        {/* Render UserProfile based on activeTab */}
+        {activeTab === "home" && (
+          <div className={styles.banner}>
+            <h2 className={styles.heroTitle}>Welcome, {menteeName}!</h2>
+            <p className={styles.heroSubtitle}>
+              Start connecting with mentors and take your career to the next
+              level!
+            </p>
+            <button
+              className={styles.browseButton}
+              onClick={() => navigate("/browse-mentors")}
+            >
+              Browse Mentors
+            </button>
 
-                {recommendedMentors.length > 0 && (
-                  <div className={styles.recommendedSection}>
-                    <h3>Recommended for You</h3>
-                    <div className={styles.recommendedMentors}>
-                      {recommendedMentors.slice(0, 5).map((mentor) => (
-                        <div
-                          key={mentor.id}
-                          className={styles.recommendedMentorCard}
-                        >
-                          <img
-                            src={mentor.image || defaultAvatar}
-                            alt={mentor.name}
-                            className={styles.recommendedMentorImage}
-                          />
-                          <div className={styles.recommendedMentorDetails}>
-                            <h4 className={styles.recommendedMentorName}>
-                              {mentor.name}
-                            </h4>
-                            <p className={styles.recommendedMentorSpecialty}>
-                              {mentor.specialty}
-                            </p>
-                            <div className={styles.recommendedMentorLocation}>
-                              <FaMapMarkerAlt />
-                              <span>{mentor.location}</span>
-                            </div>
-                            <button
-                              className={styles.followButton}
-                              onClick={() => handleFollow(mentor)}
-                            >
-                              Follow
-                            </button>
-                          </div>
-                        </div>
-                      ))}
+            {recommendedMentors.length > 0 && (
+              <div className={styles.recommendedSection}>
+                <h3>Recommended for You</h3>
+                <div className={styles.recommendedMentors}>
+                  {recommendedMentors.slice(0, 5).map((mentor) => (
+                    <div
+                      key={mentor.id}
+                      className={styles.recommendedMentorCard}
+                    >
+                      <MentorCard mentor={mentor} />
+                      <button
+                        className={styles.followButton}
+                        onClick={() => handleFollow(mentor)}
+                      >
+                        Follow
+                      </button>
                     </div>
-                  </div>
-                )}
+                  ))}
+                </div>
               </div>
             )}
-
-            {activeTab === "applications" && (
-              <div className={styles.mentorList}>
-                {pendingRequests.filter(
-                  (request) => request.status === "pending"
-                ).length > 0 ? (
-                  pendingRequests
-                    .filter((request) => request.status === "pending")
-                    .map((request) => {
-                      const mentor = mentors.find(
-                        (mentor) => mentor.id === request.mentorId
-                      );
-                      return (
-                        mentor && (
-                          <div key={request.id} className={styles.mentorCard}>
-                            <img
-                              src={mentor.image || defaultAvatar}
-                              alt={mentor.name}
-                              className={styles.mentorImage}
-                            />
-                            <div className={styles.mentorDetails}>
-                              <h3>{mentor.name}</h3>
-                              <p>{mentor.specialty}</p>
-                              <div className={styles.mentorLocation}>
-                                <FaMapMarkerAlt />
-                                <span>{mentor.location}</span>
-                              </div>
-                              <br />
-                              <p className={styles.pendingStatus}>
-                                Request is pending
-                              </p>
-                            </div>
-                          </div>
-                        )
-                      );
-                    })
-                ) : (
-                  <p>No pending follow requests.</p>
-                )}
-              </div>
-            )}
-
-            {activeTab === "inquiries" && (
-              <div className={styles.inquiriesContainer}>
-                {selectedMentor ? (
-                  <div className={styles.chatContainer}>
-                    <button onClick={handleBack} className={styles.backButton}>
-                      ← Back
-                    </button>
-                    <Chat
-                      recipientId={selectedMentor.id}
-                      recipientName={selectedMentor.name} // Pass mentor’s name as recipientName
-                    />
-                  </div>
-                ) : (
-                  <div className={styles.mentorList}>
-                    {followedMentors.length > 0 ? (
-                      followedMentors.map((mentor) => (
-                        <div
-                          key={mentor.id}
-                          className={styles.mentorCard}
-                          onClick={() => handleMentorSelect(mentor)}
-                        >
-                          <img
-                            src={mentor.image || defaultAvatar}
-                            alt={mentor.name}
-                            className={styles.mentorImage}
-                          />
-                          <div className={styles.mentorDetails}>
-                            <h3>{mentor.name}</h3>
-                            <p>{mentor.specialty}</p>
-                            <div className={styles.mentorLocation}>
-                              <FaMapMarkerAlt />
-                              <span>{mentor.location}</span>
-                            </div>
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      <p>No followed mentors to chat with.</p>
-                    )}
-                  </div>
-                )}
-              </div>
-            )}
-          </>
+          </div>
         )}
-
+        {activeTab === "applications" && (
+          <div className={styles.mentorList}>
+            {pendingRequests.filter((request) => request.status === "pending")
+              .length > 0 ? (
+              pendingRequests
+                .filter((request) => request.status === "pending")
+                .map((request) => {
+                  const mentor = mentors.find(
+                    (mentor) => mentor.id === request.mentorId
+                  );
+                  return (
+                    mentor && (
+                      <div key={request.id} className={styles.mentorCard}>
+                        <img
+                          src={mentor.image || defaultAvatar}
+                          alt={mentor.name}
+                          className={styles.mentorImage}
+                        />
+                        <div className={styles.mentorDetails}>
+                          <h3>{mentor.name}</h3>
+                          <p>{mentor.specialty}</p>
+                          <div className={styles.mentorLocation}>
+                            <FaMapMarkerAlt />
+                            <span>{mentor.location}</span>
+                          </div>
+                          <p className={styles.pendingStatus}>
+                            Request is pending
+                          </p>
+                          <button
+                            className={styles.browseButton}
+                            onClick={() => cancelFollowRequest(request.id)}
+                          >
+                            Cancel Request
+                          </button>
+                        </div>
+                      </div>
+                    )
+                  );
+                })
+            ) : (
+              <p>No pending follow requests.</p>
+            )}
+          </div>
+        )}
+        {activeTab === "inquiries" && (
+          <div className={styles.inquiriesContainer}>
+            {selectedMentor ? (
+              <div className={styles.chatContainer}>
+                <Chat
+                  recipientId={selectedMentor.id}
+                  recipientName={selectedMentor.name}
+                  onBack={handleBack} // Pass the back handler here
+                />
+              </div>
+            ) : (
+              <div className={styles.mentorList}>
+                {followedMentors.length > 0 ? (
+                  followedMentors.map((mentor) => (
+                    <div
+                      key={mentor.id}
+                      className={styles.mentorCard}
+                      onClick={() => handleMentorSelect(mentor)}
+                    >
+                      <img
+                        src={mentor.image || defaultAvatar}
+                        alt={mentor.name}
+                        className={styles.mentorImage}
+                      />
+                      <div className={styles.mentorDetails}>
+                        <h3>{mentor.name}</h3>
+                        <p>{mentor.specialty}</p>
+                        <div className={styles.mentorLocation}>
+                          <FaMapMarkerAlt />
+                          <span>{mentor.location}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p>No followed mentors to chat with.</p>
+                )}
+              </div>
+            )}
+          </div>
+        )}
         {/* Follow Request Modal */}
         {showModal && selectedMentorForRequest && (
           <FollowRequestModal

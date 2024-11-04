@@ -1,9 +1,13 @@
 // src/types.ts
 export interface Mentor {
-  id: string; // or string, depending on how your API returns it
+  id: string;
   name: string;
   specialty: string;
   image: string;
+  designation: string;
+  company: string;
+  location: string;
+  profilePicture: string;
 }
 
 export interface FollowRequest {

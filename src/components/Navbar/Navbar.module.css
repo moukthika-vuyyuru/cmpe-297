@@ -18,7 +18,7 @@
   cursor: pointer;
 }
 
-.iconTextContainer > * {
+.iconTextContainer>* {
   margin: 0;
 }
 
@@ -27,7 +27,7 @@
   align-items: center;
 }
 
-.leftSection > * {
+.leftSection>* {
   margin-right: 15px;
 }
 
@@ -36,7 +36,7 @@
   align-items: center;
 }
 
-.rightSection > * {
+.rightSection>* {
   margin-left: 15px;
 }
 
@@ -47,18 +47,38 @@
   border: none;
   color: white;
   display: flex;
-  /* font-size: 16px; */
-  /* margin: 0 0.5rem; */
+  align-items: center;
+  font-size: 16px;
+  /* Aligns icon and text */
 }
 
 .homeButton span {
   margin-left: 5px;
 }
 
+/* New style for the dashboard button */
+.button {
+  padding: 8px 12px;
+  /* Add padding for better click area */
+  border-radius: 4px;
+  /* Rounded corners */
+  transition: background-color 0.3s ease;
+  /* Smooth background transition */
+}
+
 .button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  /* Light background on hover */
   text-decoration: underline;
+  /* Underline effect */
 }
 
 .homeButton:hover {
   text-decoration: none;
+}
+
+/* Add some spacing for the dashboard button */
+.button+span {
+  margin-left: 15px;
+  /* Add space between dashboard button and welcome text */
 }
