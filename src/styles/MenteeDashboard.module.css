@@ -3,7 +3,7 @@
     padding: 20px;
     background-color: #f9f9f9;
     /* Light background for contrast */
-    min-height: 100vh;
+    min-height: 90vh;
     font-family: 'Arial', sans-serif;
     /* Set a clean font */
 }
@@ -235,6 +235,7 @@
     margin-bottom: 20px;
     /* Space below */
     transition: color 0.3s;
+    /* Smooth transition */
 }
 
 .backButton:hover {

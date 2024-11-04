@@ -1,7 +1,7 @@
 .chatContainer {
     display: flex;
     flex-direction: column;
-    height: 700px;
+    height: 90vh;
     padding: 16px;
     background-color: #f0f0f0;
 }
@@ -27,22 +27,23 @@
     display: inline-block;
 }
 
-/* Sender's messages (left aligned) */
 .senderBubble {
     background-color: #d1f1ff;
-    align-self: flex-start;
-    /* Align to the left */
-    color: #004085;
-    border-top-left-radius: 0;
-}
-
-/* Receiver's messages (right aligned) */
-.receiverBubble {
-    background-color: #e5e5ea;
     align-self: flex-end;
     /* Align to the right */
-    color: #333;
+    color: #004085;
     border-top-right-radius: 0;
+    /* Adjust border to match the corner style */
+}
+
+/* Receiver's messages (left aligned) */
+.receiverBubble {
+    background-color: #e5e5ea;
+    align-self: flex-start;
+    /* Align to the left */
+    color: #333;
+    border-top-left-radius: 0;
+    /* Adjust border to match the corner style */
 }
 
 /* Input container styling */
@@ -72,4 +73,14 @@
 
 .sendButton:hover {
     background-color: #0056b3;
+}
+
+.chatHeader {
+    padding: 8px;
+    background-color: #e5effa;
+    color: white;
+    font-size: 16px;
+    text-align: center;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
 }

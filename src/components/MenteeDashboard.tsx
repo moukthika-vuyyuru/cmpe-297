@@ -138,12 +138,7 @@ const MenteeDashboard: React.FC = () => {
             alt="Default Avatar"
             onError={(e) => (e.currentTarget.src = defaultAvatar)}
           />
-          <h3
-            className={styles.username}
-            onClick={() => setShowUserProfile(!showUserProfile)}
-          >
-            {menteeName || "Loading..."}
-          </h3>
+          <h3 className={styles.username}>{menteeName || "Loading..."}</h3>
         </div>
         <button
           className={styles.sidebarButton}
@@ -162,6 +157,12 @@ const MenteeDashboard: React.FC = () => {
           onClick={() => setActiveTab("inquiries")}
         >
           Your Mentors
+        </button>
+        <button
+          className={styles.sidebarButton}
+          onClick={() => setShowUserProfile(!showUserProfile)}
+        >
+          Profile
         </button>
       </div>
 
@@ -269,10 +270,13 @@ const MenteeDashboard: React.FC = () => {
               <div className={styles.inquiriesContainer}>
                 {selectedMentor ? (
                   <div className={styles.chatContainer}>
-                    <button className={styles.backButton} onClick={handleBack}>
-                      {"<"} {/* Left arrow character */}
+                    <button onClick={handleBack} className={styles.backButton}>
+                      ← Back
                     </button>
-                    <Chat recipientId={selectedMentor.id} />
+                    <Chat
+                      recipientId={selectedMentor.id}
+                      recipientName={selectedMentor.name} // Pass mentor’s name as recipientName
+                    />
                   </div>
                 ) : (
                   <div className={styles.mentorList}>

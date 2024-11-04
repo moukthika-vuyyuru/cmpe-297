@@ -1,0 +1,28 @@
+.footer {
+    display: flex;
+    justify-content: center;
+    /* Center the content horizontally */
+    align-items: center;
+    /* Center the content vertically */
+    background-color: #282c34;
+    /* Set a background color */
+    color: white;
+    /* Set text color */
+    padding: 10px;
+    /* Reduce padding for less height */
+    position: relative;
+    /* Position relative for proper layout */
+    bottom: 0;
+    /* Position at the bottom */
+    width: 100%;
+    /* Full width */
+    margin-top: auto;
+    /* Push footer to the bottom of the container */
+}
+
+.footer p {
+    margin: 0;
+    /* Remove default margin */
+    text-align: center;
+    /* Center text within the paragraph */
+}

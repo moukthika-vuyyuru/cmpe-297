@@ -23,6 +23,18 @@
       "username": "user",
       "password": "user",
       "role": "mentee"
+    },
+    {
+      "id": "user_1730479088202_214",
+      "username": "mentor1",
+      "password": "mentor1",
+      "role": "mentor"
+    },
+    {
+      "id": "user_1730479113456_22",
+      "username": "mentee1",
+      "password": "mentee1",
+      "role": "mentee"
     }
   ],
   "mentors": [
@@ -52,6 +64,18 @@
       "specialty": "Front end dev",
       "designation": "SDE II",
       "company": "Meta"
+    },
+    {
+      "id": "user_1730479088202_214",
+      "name": "Mentor",
+      "email": "mentor1@test",
+      "location": "San Jose, CA, USA",
+      "skills": "Typescript,NodeJS,test",
+      "profilePicture": "",
+      "bio": "",
+      "specialty": "UI/UX dev",
+      "designation": "Sr. SDE",
+      "company": "Meta"
     }
   ],
   "mentees": [
@@ -78,6 +102,16 @@
       ],
       "profilePicture": "",
       "companyOrUniversity": "sjsu"
+    },
+    {
+      "id": "user_1730479113456_22",
+      "name": "Mentee",
+      "email": "mentee1@test",
+      "location": "San Jose, California",
+      "skills": "React,opps",
+      "profilePicture": "",
+      "bio": "",
+      "companyOrUniversity": "sjsu"
     }
   ],
   "followRequests": [
@@ -94,13 +128,6 @@
       "mentorId": "user_1730177598885_707",
       "status": "accepted",
       "message": "Papa is the best!"
-    },
-    {
-      "id": "1301",
-      "menteeId": "user_1730169097464_134",
-      "mentorId": "user_1730169135256_873",
-      "status": "pending",
-      "message": "testing follow"
     },
     {
       "id": "e316",
@@ -128,6 +155,13 @@
       "mentorId": "user_1730177598885_707",
       "status": "pending",
       "message": "Test"
+    },
+    {
+      "id": "af74",
+      "menteeId": "user_1730479113456_22",
+      "mentorId": "user_1730479088202_214",
+      "status": "accepted",
+      "message": "Testing the req message"
     }
   ],
   "follows": [
@@ -140,6 +174,11 @@
       "id": "user_1730177598885_707-user_1730177630039_639",
       "menteeId": "user_1730177630039_639",
       "mentorId": "user_1730177598885_707"
+    },
+    {
+      "id": "user_1730479088202_214-user_1730479113456_22",
+      "menteeId": "user_1730479113456_22",
+      "mentorId": "user_1730479088202_214"
     }
   ],
   "messages": [
@@ -156,6 +195,48 @@
       "receiverId": "user_1730169135256_873",
       "text": "Hey",
       "timestamp": "2024-10-29T04:55:54.009Z"
+    },
+    {
+      "id": "557e",
+      "senderId": "user_1730479088202_214",
+      "receiverId": "user_1730479113456_22",
+      "text": "Hey from Mentor",
+      "timestamp": "2024-11-01T16:39:40.805Z"
+    },
+    {
+      "id": "8852",
+      "senderId": "user_1730479113456_22",
+      "receiverId": "user_1730479088202_214",
+      "text": "Hello from Mentee",
+      "timestamp": "2024-11-01T16:39:56.494Z"
+    },
+    {
+      "id": "a02a",
+      "senderId": "user_1730479088202_214",
+      "receiverId": "user_1730479113456_22",
+      "text": "How are you doing",
+      "timestamp": "2024-11-01T16:40:10.176Z"
+    },
+    {
+      "id": "713a",
+      "senderId": "user_1730479088202_214",
+      "receiverId": "user_1730479113456_22",
+      "text": "im well",
+      "timestamp": "2024-11-01T17:24:36.567Z"
+    },
+    {
+      "id": "f437",
+      "senderId": "user_1730479113456_22",
+      "receiverId": "user_1730479088202_214",
+      "text": "Hi",
+      "timestamp": "2024-11-01T22:15:33.184Z"
+    },
+    {
+      "id": "845b",
+      "senderId": "user_1730479113456_22",
+      "receiverId": "user_1730479088202_214",
+      "text": "hello",
+      "timestamp": "2024-11-01T23:08:48.044Z"
     }
   ]
 }

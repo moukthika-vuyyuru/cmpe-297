@@ -4,11 +4,12 @@ import { useUserContext } from "./UserContext";
 import styles from "../styles/Chat.module.css";
 
 interface ChatProps {
-  recipientId: string; // Define recipientId as a required prop
+  recipientId: string;
+  recipientName: string; // Add recipientName as a prop
 }
 
-const Chat: React.FC<ChatProps> = ({ recipientId }) => {
-  const { userId: contextUserId } = useUserContext(); // From logged-in user context
+const Chat: React.FC<ChatProps> = ({ recipientId, recipientName }) => {
+  const { userId: contextUserId } = useUserContext();
   const senderId = contextUserId || localStorage.getItem("userId");
 
   const [messages, setMessages] = useState<
@@ -63,6 +64,13 @@ const Chat: React.FC<ChatProps> = ({ recipientId }) => {
     }
   };
 
+  // Add a keydown event handler
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      sendMessage();
+    }
+  };
+
   if (!isValidChat) {
     return (
       <div className={styles.chatContainer}>
@@ -75,6 +83,10 @@ const Chat: React.FC<ChatProps> = ({ recipientId }) => {
 
   return (
     <div className={styles.chatContainer}>
+      {/* Chat Header */}
+      <div className={styles.chatHeader}>
+        <h3>{recipientName}</h3>
+      </div>
       <div className={styles.messages}>
         {messages.map((msg, index) => (
           <div
@@ -95,6 +107,7 @@ const Chat: React.FC<ChatProps> = ({ recipientId }) => {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown} // Add keyDown event handler here
           placeholder="Type your message..."
           className={styles.input}
         />
