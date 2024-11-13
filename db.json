@@ -109,7 +109,7 @@
       "email": "mentee1@test",
       "location": "San Jose, California",
       "skills": "React,opps",
-      "profilePicture": "",
+      "profilePicture": "blob:http://localhost:3000/c58c6afb-453f-4f90-8034-1cbc77bf3dce",
       "bio": "",
       "companyOrUniversity": "sjsu"
     }
@@ -158,18 +158,11 @@
       "message": "Testing the req message"
     },
     {
-      "id": "0a6f",
+      "id": "c520",
       "menteeId": "user_1730479113456_22",
-      "mentorId": "user_1730479088202_214",
+      "mentorId": "user_1730169135256_873",
       "status": "pending",
-      "message": "test"
-    },
-    {
-      "id": "5e73",
-      "menteeId": "user_1730479113456_22",
-      "mentorId": "user_1730479088202_214",
-      "status": "pending",
-      "message": "test"
+      "message": "h"
     }
   ],
   "follows": [

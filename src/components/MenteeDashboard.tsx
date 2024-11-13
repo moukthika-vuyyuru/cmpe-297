@@ -26,6 +26,11 @@ const MenteeDashboard: React.FC = () => {
   const [selectedMentorForRequest, setSelectedMentorForRequest] =
     useState<Mentor | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [messages, setMessages] = useState([
+    { sender: "AI", text: "Hi! How can I help you find a mentor?" },
+  ]);
+  const [inputText, setInputText] = useState("");
 
   const navigate = useNavigate();
 
@@ -122,10 +127,6 @@ const MenteeDashboard: React.FC = () => {
     }
   };
 
-  const handleMentorSelect = (mentor: Mentor) => {
-    setSelectedMentor(mentor); // Set the selected mentor
-  };
-
   const handleBack = () => {
     setSelectedMentor(null); // Reset the selected mentor
   };
@@ -153,10 +154,81 @@ const MenteeDashboard: React.FC = () => {
     }
   };
 
+  const toggleChat = () => setIsChatOpen((prev) => !prev);
+  const handleSendMessage = async () => {
+    if (!inputText.trim()) return;
+
+    const newMessages = [...messages, { sender: "Mentee", text: inputText }];
+    setMessages(newMessages); // Display the mentee's message immediately
+    setInputText("");
+
+    try {
+      // const response = await fetch(
+      //   "https://payload.vextapp.com/hook//catch/channel_token",
+      //   {
+      //     method: "POST",
+      //     headers: {
+      //       Apikey: "Api-Key .",
+      //       Accept: "application/json",
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: JSON.stringify({ payload: inputText }),
+      //   }
+      // );
+
+      // const responseData = await response.json();
+      const responseData = { text: "Python" }; // Mock response for testing
+      setMessages((prev) => [
+        ...prev,
+        {
+          sender: "AI",
+          text: formatAiResponse(responseData),
+        },
+      ]);
+    } catch (error) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          sender: "AI",
+          text: "There was an error retrieving recommendations. Please try again later.",
+        },
+      ]);
+    }
+  };
+  const formatAiResponse = (response: any) => {
+    console.log(response);
+
+    if (!response || !response.text || typeof response.text !== "string") {
+      return "No valid response received.";
+    }
+    //const text = response.text;
+    const text =
+      "\n\nBased on the mentor dataset, I recommend the following mentors who have experience in Python:\n\n1. **Bob Smith**\n\t* Skills: Python, Data Science, Machine Learning\n\t* Specialty: Data Science\n\t* Designation: Data Scientist\n\t* Company: Amazon\n\t* Location: San Francisco, CA, USA\n\nBob Smith is a Data Scientist at Amazon with expertise in Python, Data Science, and Machine Learning. He is a strong match for anyone looking for guidance in Python and related fields.\n\nPlease note that the dataset does not provide explicit information on the mentors' years of experience. However, based on their designations and companies, it can be inferred that they have significant experience in their respective fields.\n\nIf you would like to filter the results based on specific years of experience or location, please let me know, and I'll do my best to provide a more tailored recommendation.";
+
+    const formattedText = text
+      .replace(/\n\n/g, "<br><br>") // Double line breaks for paragraphs
+      .replace(/\n/g, "<br>") // Single line breaks
+      .replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;") // Tabs as indentation
+      .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>") // Bold text with **
+      .replace(/\*([^*]+)\*/g, "<strong>$1</strong>") // Bold text with *
+      .replace(/(^|\n)\s*\*\s+/g, "<br>");
+
+    return `<p>${formattedText}</p>`;
+  };
+
+  const handleMentorSelect = (mentor: Mentor) => {
+    if (selectedMentor && selectedMentor.id === mentor.id) {
+      setSelectedMentor(null); // If the same mentor is selected, hide the details
+    } else {
+      setSelectedMentor(mentor); // Show the detailed info of the selected mentor
+    }
+  };
+
   return (
     <div className={styles.dashboardContainer}>
       <ToastContainer /> {/* Toast notifications container */}
       <div className={styles.sidebar}>
+        {/* Sidebar content */}
         <div className={styles.profileCard}>
           <img
             className={styles.profilePicture}
@@ -192,8 +264,7 @@ const MenteeDashboard: React.FC = () => {
         </button>
       </div>
       <div className={styles.content}>
-        {activeTab === "profile" && <UserProfile />}{" "}
-        {/* Render UserProfile based on activeTab */}
+        {activeTab === "profile" && <UserProfile />}
         {activeTab === "home" && (
           <div className={styles.banner}>
             <h2 className={styles.heroTitle}>Welcome, {menteeName}!</h2>
@@ -201,12 +272,17 @@ const MenteeDashboard: React.FC = () => {
               Start connecting with mentors and take your career to the next
               level!
             </p>
-            <button
-              className={styles.browseButton}
-              onClick={() => navigate("/browse-mentors")}
-            >
-              Browse Mentors
-            </button>
+            <div className={styles.buttonContainer}>
+              <button
+                className={styles.browseButton}
+                onClick={() => navigate("/browse-mentors")}
+              >
+                Browse Mentors
+              </button>
+              <button className={styles.chatButton} onClick={toggleChat}>
+                Chat with AI
+              </button>
+            </div>
 
             {recommendedMentors.length > 0 && (
               <div className={styles.recommendedSection}>
@@ -325,6 +401,38 @@ const MenteeDashboard: React.FC = () => {
           />
         )}
       </div>
+      {isChatOpen && (
+        <div className={styles.fullPageChat}>
+          <div className={styles.chatHeader}>
+            <h4>Mentor Recommendations</h4>
+            <button onClick={toggleChat}>X</button>
+          </div>
+          <div className={styles.chatContent}>
+            {messages.map((msg, index) => (
+              <div
+                key={index}
+                className={
+                  msg.sender === "AI" ? styles.aiMessage : styles.userMessage
+                }
+                dangerouslySetInnerHTML={{ __html: msg.text }}
+              />
+            ))}
+          </div>
+
+          <div className={styles.chatInputContainer}>
+            <input
+              type="text"
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              placeholder="Ask for a mentor recommendation..."
+              className={styles.chatInput}
+            />
+            <button onClick={handleSendMessage} className={styles.sendButton}>
+              Send
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
