@@ -6,6 +6,8 @@ import FollowRequestModal from "./FollowRequestModal";
 import { useUserContext } from "./UserContext"; // Import the hook
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import MentorProfileModal from "./MentorProfileModal";
+import { Mentor } from "../types";
 
 // Define an interface for FollowRequest
 interface FollowRequest {
@@ -16,14 +18,6 @@ interface FollowRequest {
   message: string;
 }
 
-interface Mentor {
-  id: string;
-  name: string;
-  specialty: string;
-  image: string;
-  location: string;
-}
-
 const BrowseMentors: React.FC = () => {
   const [mentors, setMentors] = useState<Mentor[]>([]);
   const [followedMentorIds, setFollowedMentorIds] = useState<string[]>([]);
@@ -31,7 +25,7 @@ const BrowseMentors: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [showModal, setShowModal] = useState(false);
   const [selectedMentor, setSelectedMentor] = useState<Mentor | null>(null);
-  const { userId } = useUserContext(); // Use the useUserContext hook to get the logged-in user's ID
+  const { userId } = useUserContext();
 
   useEffect(() => {
     const fetchMentors = async () => {
@@ -160,9 +154,14 @@ const BrowseMentors: React.FC = () => {
     }
   };
 
+  const handleMentorCardClick = (mentor: Mentor) => {
+    setSelectedMentor(mentor);
+    setShowModal(true); // Show modal when card is clicked
+  };
+
   return (
     <div className={styles.container}>
-      <ToastContainer /> {/* Toast notifications container */}
+      <ToastContainer />
       <h2>Browse Mentors</h2>
       <input
         type="text"
@@ -178,7 +177,11 @@ const BrowseMentors: React.FC = () => {
               (req) => req.mentorId === mentor.id
             );
             return (
-              <div key={mentor.id} className={styles.mentorCard}>
+              <div
+                key={mentor.id}
+                className={styles.mentorCard}
+                onClick={() => handleMentorCardClick(mentor)}
+              >
                 <img
                   src={mentor.image || defaultAvatar}
                   alt={mentor.name}
@@ -198,7 +201,7 @@ const BrowseMentors: React.FC = () => {
                   ) : pendingRequest ? (
                     <button
                       className={styles.followButton}
-                      onClick={() => cancelFollowRequest(pendingRequest.id)} // Cancel request
+                      onClick={() => cancelFollowRequest(pendingRequest.id)}
                     >
                       Cancel Request
                     </button>
@@ -218,12 +221,12 @@ const BrowseMentors: React.FC = () => {
           <p>No mentors found.</p>
         )}
       </div>
-      {/* Follow Request Modal */}
+      {/* Mentor Profile Modal */}
       {showModal && selectedMentor && (
-        <FollowRequestModal
-          mentorName={selectedMentor.name}
-          onSend={sendFollowRequest}
+        <MentorProfileModal
+          mentor={selectedMentor}
           onClose={() => setShowModal(false)}
+          onFollow={() => handleFollow(selectedMentor)}
         />
       )}
     </div>

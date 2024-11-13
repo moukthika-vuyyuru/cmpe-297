@@ -12,6 +12,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import MentorCard from "./MentorCard";
 import { Mentor } from "../types";
+import MentorProfileModal from "./MentorProfileModal";
 
 const MenteeDashboard: React.FC = () => {
   const { userId: menteeId, name: menteeName } = useUserContext();
@@ -31,6 +32,7 @@ const MenteeDashboard: React.FC = () => {
     { sender: "AI", text: "Hi! How can I help you find a mentor?" },
   ]);
   const [inputText, setInputText] = useState("");
+  const [showProfileModal, setShowProfileModal] = useState(false);
 
   const navigate = useNavigate();
 
@@ -293,7 +295,14 @@ const MenteeDashboard: React.FC = () => {
                       key={mentor.id}
                       className={styles.recommendedMentorCard}
                     >
-                      <MentorCard mentor={mentor} />
+                      <div
+                        onClick={() => {
+                          setSelectedMentor(mentor);
+                          setShowProfileModal(true);
+                        }}
+                      >
+                        <MentorCard mentor={mentor} />
+                      </div>
                       <button
                         className={styles.followButton}
                         onClick={() => handleFollow(mentor)}
@@ -304,6 +313,13 @@ const MenteeDashboard: React.FC = () => {
                   ))}
                 </div>
               </div>
+            )}
+            {showProfileModal && selectedMentor && (
+              <MentorProfileModal
+                mentor={selectedMentor}
+                onClose={() => setShowProfileModal(false)}
+                onFollow={() => handleFollow(selectedMentor)}
+              />
             )}
           </div>
         )}

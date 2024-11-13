@@ -9,6 +9,8 @@ export interface Mentor {
   location: string;
   profilePicture: string;
   bio: string;
+  skills: string;
+  email: string;
 }
 
 export interface FollowRequest {
