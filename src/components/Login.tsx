@@ -23,7 +23,7 @@ const Login: React.FC = () => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    fetch("http://localhost:5001/users")
+    fetch("http://localhost:8080/users")
       .then((res) => res.json())
       .then((users: User[]) => {
         const user = users.find(
@@ -48,7 +48,7 @@ const Login: React.FC = () => {
     <div className={styles.container}>
       <div className={styles.banner}>
         <img
-          src={require("../assets/MC.webp")}
+          src="https://mentorapplication.s3.us-west-2.amazonaws.com/MC.webp"
           alt="Community"
           className={styles.bannerImage}
         />

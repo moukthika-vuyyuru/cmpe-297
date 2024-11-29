@@ -3,9 +3,10 @@ import styles from "../styles/MentorDashboard.module.css";
 import MentorProfile from "./MentorProfile";
 import { useUserContext } from "./UserContext";
 import { FollowRequest } from "../types"; // Ensure this type is defined correctly
-import defaultAvatar from "../assets/default-avatar.jpeg";
 import Chat from "./Chat"; // Ensure you are using this component correctly if needed
 import { FaMapMarkerAlt } from "react-icons/fa"; // Import the map icon if needed
+
+const defaultAvatar = "https://mentorapplication.s3.us-west-2.amazonaws.com/default-avatar.jpeg";
 
 const MentorDashboard: React.FC = () => {
   const { userId } = useUserContext();
@@ -25,7 +26,7 @@ const MentorDashboard: React.FC = () => {
 
   useEffect(() => {
     // Fetch mentor details
-    fetch(`http://localhost:5001/mentors/${userId}`)
+    fetch(`http://localhost:8080/mentors/${userId}`)
       .then((res) => res.json())
       .then((data) => {
         setMentorName(data.name);
@@ -34,7 +35,7 @@ const MentorDashboard: React.FC = () => {
   }, [userId]);
 
   useEffect(() => {
-    fetch(`http://localhost:5001/mentees`)
+    fetch(`http://localhost:8080/mentees`)
       .then((res) => res.json())
       .then((data) => {
         const menteeData = data.reduce(
@@ -66,20 +67,20 @@ const MentorDashboard: React.FC = () => {
 
   useEffect(() => {
     fetch(
-      `http://localhost:5001/followRequests?mentorId=${userId}&status=pending`
+      `http://localhost:8080/followRequests?mentorId=${userId}&status=pending`
     )
       .then((res) => res.json())
       .then((data) => setFollowRequests(data))
       .catch((err) => console.error("Failed to load follow requests", err));
 
-    fetch(`http://localhost:5001/follows?mentorId=${userId}`)
+    fetch(`http://localhost:8080/follows?mentorId=${userId}`)
       .then((res) => res.json())
       .then((data) => setFollows(data))
       .catch((err) => console.error("Failed to load follows", err));
   }, [userId]);
 
   const handleAccept = (requestId: string, menteeId: string) => {
-    fetch(`http://localhost:5001/followRequests/${requestId}`, {
+    fetch(`http://localhost:8080/followRequests/${requestId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status: "accepted" }),
@@ -99,7 +100,7 @@ const MentorDashboard: React.FC = () => {
 
           setFollows((prev) => [...prev, newFollow]);
 
-          return fetch(`http://localhost:5001/follows`, {
+          return fetch(`http://localhost:8080/follows`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newFollow),
@@ -112,7 +113,7 @@ const MentorDashboard: React.FC = () => {
   };
 
   const handleReject = (requestId: string) => {
-    fetch(`http://localhost:5001/followRequests/${requestId}`, {
+    fetch(`http://localhost:8080/followRequests/${requestId}`, {
       method: "DELETE",
     })
       .then((res) => {
@@ -220,7 +221,7 @@ const MentorDashboard: React.FC = () => {
               <div key={request.id} className={styles.requestCard}>
                 <img
                   className={styles.menteeProfilePicture}
-                  src={`http://localhost:5001/mentees/${request.menteeId}/picture`}
+                  src={`http://localhost:8080/mentees/${request.menteeId}/picture`}
                   alt="Mentee"
                   onError={(e) => (e.currentTarget.src = defaultAvatar)}
                 />

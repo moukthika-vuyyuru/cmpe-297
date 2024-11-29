@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import styles from "../styles/MentorCard.module.css";
 import { Mentor } from "../types";
-import defaultAvatar from "../assets/default-avatar.jpeg";
+
+const defaultAvatar = "https://mentorapplication.s3.us-west-2.amazonaws.com/default-avatar.jpeg";
 
 const MentorCard: React.FC<{ mentor: Mentor }> = ({ mentor }) => {
   const [imgSrc, setImgSrc] = useState(mentor.image || defaultAvatar); // Use defaultAvatar if mentor.image is not available

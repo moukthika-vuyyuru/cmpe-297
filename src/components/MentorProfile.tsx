@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import styles from "../styles/MentorProfile.module.css";
 import { useUserContext } from "./UserContext";
-import defaultAvatar from "../assets/default-avatar.jpeg";
 
 interface Profile {
   profilePicture: string; // Renamed to profilePicture
@@ -14,6 +13,8 @@ interface Profile {
   bio: string;
 }
 
+const defaultAvatar = "https://mentorapplication.s3.us-west-2.amazonaws.com/default-avatar.jpeg";
+
 const MentorProfile: React.FC = () => {
   const { userId } = useUserContext(); // Get the logged-in mentor's ID
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -24,7 +25,7 @@ const MentorProfile: React.FC = () => {
   useEffect(() => {
     if (!userId) return;
 
-    fetch(`http://localhost:5001/mentors/${userId}`)
+    fetch(`http://localhost:8080/mentors/${userId}`)
       .then((res) => res.json())
       .then((data: Profile) => setProfile(data))
       .catch((err) => console.error("Failed to load mentor profile", err));
@@ -65,7 +66,7 @@ const MentorProfile: React.FC = () => {
           : profile.profilePicture, // Otherwise, keep the existing one
       };
 
-      fetch(`http://localhost:5001/mentors/${userId}`, {
+      fetch(`http://localhost:8080/mentors/${userId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

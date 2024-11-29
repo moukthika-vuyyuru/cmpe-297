@@ -5,7 +5,6 @@ import { useUserContext } from "./UserContext";
 import { useNavigate } from "react-router-dom";
 import styles from "../styles/MenteeDashboard.module.css";
 import { FollowRequest } from "../types";
-import defaultAvatar from "../assets/default-avatar.jpeg";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import Chat from "./Chat";
 import UserProfile from "./UserProfile";
@@ -18,6 +17,8 @@ interface Mentor {
   image: string;
   location: string;
 }
+
+const defaultAvatar = "https://mentorapplication.s3.us-west-2.amazonaws.com/default-avatar.jpeg";
 
 const MenteeDashboard: React.FC = () => {
   const { userId: menteeId, name: menteeName } = useUserContext();
@@ -39,7 +40,7 @@ const MenteeDashboard: React.FC = () => {
   useEffect(() => {
     const fetchMentors = async () => {
       try {
-        const res = await fetch(`http://localhost:5001/mentors`);
+        const res = await fetch(`http://localhost:8080/mentors`);
         const data = await res.json();
         setMentors(data);
       } catch (err) {
@@ -56,7 +57,7 @@ const MenteeDashboard: React.FC = () => {
 
       try {
         const res = await fetch(
-          `http://localhost:5001/followRequests?menteeId=${menteeId}`
+          `http://localhost:8080/followRequests?menteeId=${menteeId}`
         );
         const data: FollowRequest[] = await res.json();
         setPendingRequests(data);
@@ -96,7 +97,7 @@ const MenteeDashboard: React.FC = () => {
     if (!selectedMentorForRequest || !menteeId) return;
 
     try {
-      const res = await fetch(`http://localhost:5001/followRequests`, {
+      const res = await fetch(`http://localhost:8080/followRequests`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

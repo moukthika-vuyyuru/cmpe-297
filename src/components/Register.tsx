@@ -39,7 +39,7 @@ const Register: React.FC = () => {
       };
 
       // Save the user
-      await fetch("http://localhost:5001/users", {
+      await fetch("http://localhost:8080/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userData),
@@ -64,7 +64,7 @@ const Register: React.FC = () => {
           company: formData.company,
         };
 
-        await fetch("http://localhost:5001/mentors", {
+        await fetch("http://localhost:8080/mentors", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(mentorData),
@@ -76,7 +76,7 @@ const Register: React.FC = () => {
           companyOrUniversity: formData.companyOrUniversity,
         };
 
-        await fetch("http://localhost:5001/mentees", {
+        await fetch("http://localhost:8080/mentees", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(menteeData),
@@ -95,7 +95,7 @@ const Register: React.FC = () => {
     <div className={styles.container}>
       <div className={styles.banner}>
         <img
-          src={require("../assets/MC.webp")}
+          src="https://mentorapplication.s3.us-west-2.amazonaws.com/MC.webp"
           alt="Community"
           className={styles.bannerImage}
         />

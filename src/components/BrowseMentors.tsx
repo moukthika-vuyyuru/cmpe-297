@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import styles from "../styles/BrowseMentors.module.css";
-import defaultAvatar from "../assets/default-avatar.jpeg";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import FollowRequestModal from "./FollowRequestModal";
 import { useUserContext } from "./UserContext"; // Import the hook
@@ -25,7 +24,7 @@ const BrowseMentors: React.FC = () => {
   useEffect(() => {
     const fetchMentors = async () => {
       try {
-        const res = await fetch(`http://localhost:5001/mentors`);
+        const res = await fetch(`http://localhost:8080/mentors`);
         const data = await res.json();
         setMentors(data);
       } catch (err) {
@@ -57,7 +56,7 @@ const BrowseMentors: React.FC = () => {
     if (!selectedMentor) return;
 
     try {
-      const res = await fetch(`http://localhost:5001/followRequests`, {
+      const res = await fetch(`http://localhost:8080/followRequests`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -96,7 +95,7 @@ const BrowseMentors: React.FC = () => {
           filteredMentors.map((mentor) => (
             <div key={mentor.id} className={styles.mentorCard}>
               <img
-                src={mentor.image || defaultAvatar}
+                src="https://mentorapplication.s3.us-west-2.amazonaws.com/default-avatar.jpeg"
                 alt={mentor.name}
                 className={styles.mentorImage}
               />

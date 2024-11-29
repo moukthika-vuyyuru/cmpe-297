@@ -29,7 +29,7 @@ const Chat: React.FC<ChatProps> = ({ recipientId }) => {
 
     const fetchMessages = async () => {
       try {
-        const response = await axios.get(`http://localhost:5001/messages`);
+        const response = await axios.get(`http://localhost:8080/messages`);
         const filteredMessages = response.data.filter(
           (msg: { senderId: string; receiverId: string }) =>
             (msg.senderId === senderId && msg.receiverId === recipientId) ||
@@ -55,7 +55,7 @@ const Chat: React.FC<ChatProps> = ({ recipientId }) => {
     };
 
     try {
-      await axios.post("http://localhost:5001/messages", newMessage);
+      await axios.post("http://localhost:8080/messages", newMessage);
       setMessages((prev) => [...prev, newMessage]);
       setInput("");
     } catch (error) {

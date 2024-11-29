@@ -1,12 +1,13 @@
 import React from "react";
 import styles from "../styles/MenteeList.module.css";
-import defaultAvatar from "../assets/default-avatar.jpeg";
 
 interface MenteeListProps {
   follows: { menteeId: string; id: string }[]; // Adjust according to your follow structure
   menteeMap: Record<string, string>;
   onMenteeSelect: (menteeId: string) => void;
 }
+
+const defaultAvatar = "https://mentorapplication.s3.us-west-2.amazonaws.com/default-avatar.jpeg";
 
 const MenteeList: React.FC<MenteeListProps> = ({
   follows,
