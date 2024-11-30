@@ -7,6 +7,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import MentorProfileModal from "./MentorProfileModal";
 import { Mentor } from "../types";
+import {APIURL} from "../Utilities/Apiurl";
+
 
 // Define an interface for FollowRequest
 interface FollowRequest {
@@ -29,7 +31,7 @@ const BrowseMentors: React.FC = () => {
   useEffect(() => {
     const fetchMentors = async () => {
       try {
-        const res = await fetch(`http://localhost:8080/mentors`);
+        const res = await fetch(`${APIURL}/mentors`);
         const data = await res.json();
         setMentors(data);
       } catch (err) {
@@ -44,7 +46,7 @@ const BrowseMentors: React.FC = () => {
   const fetchFollowedMentors = async () => {
     try {
       const res = await fetch(
-        `http://localhost:8080/followRequests?menteeId=${userId}`
+        `${APIURL}/followRequests?menteeId=${userId}`
       );
       const data: FollowRequest[] = await res.json();
       setFollowedMentorIds(
@@ -61,7 +63,7 @@ const BrowseMentors: React.FC = () => {
   const fetchPendingRequests = async () => {
     try {
       const res = await fetch(
-        `http://localhost:8080/followRequests?menteeId=${userId}`
+        `${APIURL}/followRequests?menteeId=${userId}`
       );
       const data: FollowRequest[] = await res.json();
       setPendingRequests(
@@ -102,7 +104,7 @@ const BrowseMentors: React.FC = () => {
     if (!selectedMentor) return;
 
     try {
-      const res = await fetch(`http://localhost:8080/followRequests`, {
+      const res = await fetch(`${APIURL}/followRequests`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -134,7 +136,7 @@ const BrowseMentors: React.FC = () => {
   const cancelFollowRequest = async (requestId: string) => {
     try {
       const res = await fetch(
-        `http://localhost:8080/followRequests/${requestId}`,
+        `${APIURL}/followRequests/${requestId}`,
         {
           method: "DELETE",
         }

@@ -5,6 +5,7 @@ import { useUserContext } from "./UserContext";
 import { FollowRequest } from "../types"; // Ensure this type is defined correctly
 import Chat from "./Chat"; // Ensure you are using this component correctly if needed
 import { FaMapMarkerAlt } from "react-icons/fa"; // Import the map icon if needed
+import {APIURL} from "../Utilities/Apiurl"; // Import the API URL if needed
 
 const defaultAvatar = "https://mentorapplication.s3.us-west-2.amazonaws.com/default-avatar.jpeg";
 
@@ -26,7 +27,7 @@ const MentorDashboard: React.FC = () => {
 
   useEffect(() => {
     // Fetch mentor details
-    fetch(`http://localhost:8080/mentors/${userId}`)
+    fetch(`$A/mentors/${userId}`)
       .then((res) => res.json())
       .then((data) => {
         setMentorName(data.name);

@@ -1,6 +1,7 @@
 import axios from "axios";
+import {APIURL} from "../Utilities/Apiurl";
 
-const API_URL = "http://localhost:8080/mentors";
+const API_URL = '${APIURL}/mentors';
 
 // Get All Mentors
 export const getAllMentors = async () => {

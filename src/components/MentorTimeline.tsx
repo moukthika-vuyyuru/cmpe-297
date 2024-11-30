@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "../styles/MentorTimeline.module.css";
+import { APIURL } from "../Utilities/Apiurl";
 
 const MentorTimeline: React.FC = () => {
   const [requests, setRequests] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchRequests = async () => {
-      const response = await fetch("http://localhost:8080/mentee-requests");
+      const response = await fetch(APIURL+"/mentee-requests");
       const data = await response.json();
       setRequests(data);
     };
@@ -17,7 +18,7 @@ const MentorTimeline: React.FC = () => {
 
   const handleAccept = async (menteeId: number) => {
     // Call API to accept the request
-    await fetch(`http://localhost:8080/mentee-requests/${menteeId}`, {
+    await fetch(`${APIURL}/mentee-requests/${menteeId}`, {
       method: "PATCH",
       body: JSON.stringify({ status: "accepted" }), // Adjust as necessary
       headers: { "Content-Type": "application/json" },
@@ -27,7 +28,7 @@ const MentorTimeline: React.FC = () => {
 
   const handleReject = async (menteeId: number) => {
     // Call API to reject the request
-    await fetch(`http://localhost:8080/mentee-requests/${menteeId}`, {
+    await fetch(`${APIURL}/mentee-requests/${menteeId}`, {
       method: "PATCH",
       body: JSON.stringify({ status: "rejected" }), // Adjust as necessary
       headers: { "Content-Type": "application/json" },

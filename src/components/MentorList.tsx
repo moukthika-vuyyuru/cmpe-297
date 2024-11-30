@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import MentorCard from "./MentorCard";
 import { Mentor } from "../types";
 import styles from "../styles/MentorList.module.css";
+import { APIURL } from "../Utilities/Apiurl";
 
-const API_URL = "http://localhost:8080/mentors"; // Your API endpoint
+const API_URL = APIURL+"/mentors"; // Your API endpoint
 
 const MentorList: React.FC = React.memo(() => {
   const [mentors, setMentors] = useState<Mentor[]>([]);

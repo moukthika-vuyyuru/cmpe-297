@@ -12,6 +12,8 @@ import "react-toastify/dist/ReactToastify.css";
 import MentorCard from "./MentorCard";
 import { Mentor } from "../types";
 import MentorProfileModal from "./MentorProfileModal";
+import {APIURL} from "../Utilities/Apiurl";
+
 
 const defaultAvatar = "https://mentorapplication.s3.us-west-2.amazonaws.com/default-avatar.jpeg";
 
@@ -41,7 +43,7 @@ const MenteeDashboard: React.FC = () => {
   useEffect(() => {
     const fetchMentors = async () => {
       try {
-        const res = await fetch(`http://localhost:8080/mentors`);
+        const res = await fetch(`${APIURL}/mentors`);
         const data = await res.json();
         setMentors(data);
       } catch (err) {
@@ -58,7 +60,7 @@ const MenteeDashboard: React.FC = () => {
 
     try {
       const res = await fetch(
-        `http://localhost:8080/followRequests?menteeId=${menteeId}`
+        `${APIURL}/followRequests?menteeId=${menteeId}`
       );
       const data: FollowRequest[] = await res.json();
       setPendingRequests(data);
@@ -99,7 +101,7 @@ const MenteeDashboard: React.FC = () => {
     if (!selectedMentorForRequest || !menteeId) return;
 
     try {
-      const res = await fetch(`http://localhost:8080/followRequests`, {
+      const res = await fetch(`${APIURL}/followRequests`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -138,7 +140,7 @@ const MenteeDashboard: React.FC = () => {
   const cancelFollowRequest = async (requestId: string) => {
     try {
       const res = await fetch(
-        `http://localhost:8080/followRequests/${requestId}`,
+        `${APIURL}/followRequests/${requestId}`,
         {
           method: "DELETE",
         }

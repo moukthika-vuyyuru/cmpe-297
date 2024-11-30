@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import styles from "../styles/UserProfile.module.css";
 import { useUserContext } from "./UserContext";
+import { APIURL } from "../Utilities/Apiurl";
 
 interface UserProfileData {
   profilePicture: string;
@@ -27,7 +28,7 @@ const UserProfile: React.FC = () => {
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const res = await fetch(`http://localhost:8080/mentees/${userId}`);
+        const res = await fetch(`${APIURL}/mentees/${userId}`);
         if (!res.ok) throw new Error("Failed to fetch user details");
         const data: UserProfileData = await res.json();
         setUserProfile(data);
@@ -74,7 +75,7 @@ const UserProfile: React.FC = () => {
       };
 
       try {
-        const res = await fetch(`http://localhost:8080/mentees/${userId}`, {
+        const res = await fetch(`${APIURL}/mentees/${userId}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(updatedProfile),

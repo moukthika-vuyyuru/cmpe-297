@@ -4,6 +4,8 @@ import { useUserContext } from "./UserContext";
 import styles from "../styles/Login.module.css";
 import { toast, ToastContainer } from "react-toastify"; // Import Toast functions
 import "react-toastify/dist/ReactToastify.css"; // Import Toast CSS
+import {APIURL} from "../Utilities/Apiurl";
+
 
 interface User {
   id: string;
@@ -24,7 +26,7 @@ const Login: React.FC = () => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    fetch("http://localhost:8080/users")
+    fetch(`${APIURL}/users`)
       .then((res) => res.json())
       .then((users: User[]) => {
         const user = users.find(

@@ -4,6 +4,8 @@ import { useUserContext } from "./UserContext";
 import styles from "../styles/Chat.module.css";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
+import {APIURL} from "../Utilities/Apiurl";
+
 
 
 interface ChatProps {
@@ -33,7 +35,7 @@ const Chat: React.FC<ChatProps> = ({ recipientId, recipientName, onBack }) => {
     if (!isValidChat) return;
   
     const stompClient = new Client({
-      webSocketFactory: () => new SockJS("http://localhost:8080/server"),
+      webSocketFactory: () => new SockJS(APIURL+"/server"),
       debug: (str) => console.log(str),
       onConnect: () => {
         console.log("Connected to WebSocket");
@@ -74,7 +76,7 @@ const Chat: React.FC<ChatProps> = ({ recipientId, recipientName, onBack }) => {
     };
 
     try {
-      await axios.post("http://localhost:8080/messages", newMessage);
+      await axios.post(APIURL+"/messages", newMessage);
       setInput("");
     } catch (error) {
       console.error("Failed to send message:", error);
