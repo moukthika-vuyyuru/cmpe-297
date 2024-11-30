@@ -44,7 +44,7 @@ const BrowseMentors: React.FC = () => {
   const fetchFollowedMentors = async () => {
     try {
       const res = await fetch(
-        `http://localhost:5001/followRequests?menteeId=${userId}`
+        `http://localhost:8080/followRequests?menteeId=${userId}`
       );
       const data: FollowRequest[] = await res.json();
       setFollowedMentorIds(
@@ -61,7 +61,7 @@ const BrowseMentors: React.FC = () => {
   const fetchPendingRequests = async () => {
     try {
       const res = await fetch(
-        `http://localhost:5001/followRequests?menteeId=${userId}`
+        `http://localhost:8080/followRequests?menteeId=${userId}`
       );
       const data: FollowRequest[] = await res.json();
       setPendingRequests(
@@ -134,7 +134,7 @@ const BrowseMentors: React.FC = () => {
   const cancelFollowRequest = async (requestId: string) => {
     try {
       const res = await fetch(
-        `http://localhost:5001/followRequests/${requestId}`,
+        `http://localhost:8080/followRequests/${requestId}`,
         {
           method: "DELETE",
         }
@@ -182,7 +182,7 @@ const BrowseMentors: React.FC = () => {
                 onClick={() => handleMentorCardClick(mentor)}
               >
                 <img
-                  src={mentor.image || defaultAvatar}
+                  src={mentor.image || "https://mentorapplication.s3.us-west-2.amazonaws.com/default-avatar.jpeg"}
                   alt={mentor.name}
                   className={styles.mentorImage}
                 />
@@ -216,29 +216,6 @@ const BrowseMentors: React.FC = () => {
               </div>
             );
           })
-          filteredMentors.map((mentor) => (
-            <div key={mentor.id} className={styles.mentorCard}>
-              <img
-                src="https://mentorapplication.s3.us-west-2.amazonaws.com/default-avatar.jpeg"
-                alt={mentor.name}
-                className={styles.mentorImage}
-              />
-              <div className={styles.mentorDetails}>
-                <h3>{mentor.name}</h3>
-                <p>{mentor.specialty}</p>
-                <div className={styles.mentorLocation}>
-                  <FaMapMarkerAlt />
-                  <span>{mentor.location}</span>
-                </div>
-                <button
-                  className={styles.followButton}
-                  onClick={() => handleFollow(mentor)}
-                >
-                  Follow
-                </button>
-              </div>
-            </div>
-          ))
         ) : (
           <p>No mentors found.</p>
         )}

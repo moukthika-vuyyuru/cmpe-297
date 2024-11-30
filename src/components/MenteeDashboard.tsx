@@ -15,6 +15,7 @@ import MentorProfileModal from "./MentorProfileModal";
 
 const defaultAvatar = "https://mentorapplication.s3.us-west-2.amazonaws.com/default-avatar.jpeg";
 
+
 const MenteeDashboard: React.FC = () => {
   const { userId: menteeId, name: menteeName } = useUserContext();
   const [mentors, setMentors] = useState<Mentor[]>([]);
@@ -57,7 +58,7 @@ const MenteeDashboard: React.FC = () => {
 
     try {
       const res = await fetch(
-        `http://localhost:5001/followRequests?menteeId=${menteeId}`
+        `http://localhost:8080/followRequests?menteeId=${menteeId}`
       );
       const data: FollowRequest[] = await res.json();
       setPendingRequests(data);
@@ -65,16 +66,6 @@ const MenteeDashboard: React.FC = () => {
       console.error("Failed to load follow requests", err);
     }
   };
-      try {
-        const res = await fetch(
-          `http://localhost:8080/followRequests?menteeId=${menteeId}`
-        );
-        const data: FollowRequest[] = await res.json();
-        setPendingRequests(data);
-      } catch (err) {
-        console.error("Failed to load follow requests", err);
-      }
-    };
 
   useEffect(() => {
     fetchPendingRequests(); // Call on component mount
@@ -147,7 +138,7 @@ const MenteeDashboard: React.FC = () => {
   const cancelFollowRequest = async (requestId: string) => {
     try {
       const res = await fetch(
-        `http://localhost:5001/followRequests/${requestId}`,
+        `http://localhost:8080/followRequests/${requestId}`,
         {
           method: "DELETE",
         }

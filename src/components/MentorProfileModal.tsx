@@ -1,7 +1,6 @@
 import React from "react";
 import styles from "../styles/MentorProfileModal.module.css";
 import { Mentor } from "../types";
-import defaultAvatar from "../assets/default-avatar.jpeg";
 import { FaMapMarkerAlt } from "react-icons/fa";
 
 interface MentorProfileModalProps {
@@ -9,6 +8,8 @@ interface MentorProfileModalProps {
   onClose: () => void;
   onFollow: () => void;
 }
+
+const defaultAvatar = "https://mentorapplication.s3.us-west-2.amazonaws.com/default-avatar.jpeg"
 
 const MentorProfileModal: React.FC<MentorProfileModalProps> = ({
   mentor,
