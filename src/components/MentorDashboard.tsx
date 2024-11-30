@@ -172,10 +172,13 @@ const MentorDashboard: React.FC = () => {
       <div className={styles.content}>
         {selectedMenteeId ? (
           <div className={styles.chatContainer}>
-            <button onClick={handleBack} className={styles.backButton}>
-              ← Back
-            </button>
-            <Chat recipientId={selectedMenteeId} />
+            <Chat
+              recipientId={selectedMenteeId}
+              recipientName={
+                menteeMap[selectedMenteeId]?.name || "Unknown Mentee"
+              }
+              onBack={handleBack}
+            />
           </div>
         ) : activeTab === "mentees" ? (
           <div className={styles.chatContainer}>

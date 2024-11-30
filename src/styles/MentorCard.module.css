@@ -36,3 +36,29 @@
     color: #777;
     font-size: 0.9rem;
 }
+
+.mentorDesignation {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 5px 0;
+}
+
+/* Updated location styling */
+.locationContainer {
+    display: inline-flex;
+    /* Makes icon and text stay inline */
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9em;
+    color: #888;
+    margin-top: 8px;
+}
+
+.locationIcon {
+    color: #007bff;
+    margin-right: 5px;
+}
+
+.mentorLocation {
+    margin: 0;
+}

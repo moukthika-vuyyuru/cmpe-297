@@ -1,23 +1,31 @@
 .dashboardContainer {
     display: flex;
-    padding: 20px;
+    flex-direction: row;
+    height: 90vh;
+    overflow: hidden;
     background-color: #f9f9f9;
-    /* Light background for contrast */
-    min-height: 100vh;
     font-family: 'Arial', sans-serif;
-    /* Set a clean font */
 }
 
 .sidebar {
+    flex-shrink: 0;
     width: 250px;
     background-color: #2c3e50;
-    /* Dark sidebar */
     box-shadow: 0 2px 20px rgba(0, 0, 0, 0.15);
-    /* Enhanced shadow */
     border-radius: 10px;
-    /* Softer corners */
     padding: 20px;
     margin-right: 20px;
+    overflow-y: auto;
+    max-height: 90vh;
+}
+
+.content {
+    flex: 1;
+    overflow-y: auto;
+    flex-direction: column;
+    padding: 20px;
+    background-color: #ecf0f1;
+    border-radius: 10px;
 }
 
 .profileCard {
@@ -26,20 +34,14 @@
     align-items: center;
     margin-bottom: 30px;
     background-color: #34495e;
-    /* Slightly lighter for the profile card */
     border-radius: 10px;
-    /* Softer corners */
     padding: 15px;
-    /* More padding */
     color: white;
-    /* White text for better contrast */
     transition: transform 0.2s;
-    /* Add a hover effect */
 }
 
 .profileCard:hover {
     transform: scale(1.02);
-    /* Slight scale on hover */
 }
 
 .profilePicture {
@@ -52,36 +54,27 @@
 
 .username {
     font-size: 20px;
-    /* Slightly larger font size */
     font-weight: bold;
     text-align: center;
-    /* Center align text */
 }
 
 .sidebarButton {
     width: 100%;
     padding: 12px;
-    /* Increased padding for buttons */
     background-color: #e67e22;
-    /* Orange button */
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     margin-bottom: 15px;
-    /* Increased margin */
     text-align: center;
     font-size: 16px;
-    /* Larger font for buttons */
     transition: background-color 0.3s, transform 0.2s;
-    /* Transition effects */
 }
 
 .sidebarButton:hover {
     background-color: #d35400;
-    /* Darker orange on hover */
     transform: scale(1.02);
-    /* Scale effect on hover */
 }
 
 
@@ -90,34 +83,18 @@
     width: 100%;
     padding: 10px;
     background-color: #ff4757;
-    /* Red color for logout */
     color: white;
     border: none;
     cursor: pointer;
 }
 
-.content {
-    flex: 1;
-    background-color: #ecf0f1;
-    /* Light content area */
-    padding: 20px;
-    border-radius: 10px;
-    /* Softer corners */
-}
-
 .banner {
     background-color: #f9f9f9;
-    /* Light background color */
     padding: 40px 20px;
-    /* Padding for spacing */
     text-align: center;
-    /* Center align the text */
     border-radius: 10px;
-    /* Rounded corners */
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    /* Subtle shadow for depth */
     margin-bottom: 20px;
-    /* Space below the hero section */
 }
 
 .mentorList {
@@ -128,52 +105,35 @@
     border-radius: 10px;
 }
 
-
 .mentorCard {
     background: #fff;
-    /* White background for contrast */
     border-radius: 12px;
-    /* More rounded corners */
     padding: 15px;
-    /* More padding for comfort */
     width: calc(25% - 20px);
-    /* Adjust to fit your layout */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    /* Subtle shadow */
     transition: transform 0.2s;
-    /* Animation for hover effect */
 }
 
 .mentorCard:hover {
     transform: translateY(-5px);
-    /* Lift effect on hover */
 }
 
 .mentorImage {
     width: 90%;
-    /* Full width for the image */
     height: 200px;
-    /* Fixed height for uniformity */
     border-radius: 12px;
-    /* Consistent border radius */
     object-fit: cover;
-    /* Cover to fill the area while preserving aspect ratio */
     display: block;
-    /* Ensure the image is a block element */
     margin: 0 auto;
-    /* Center the image horizontally */
 }
 
 .mentorDetails {
     margin-top: 10px;
-    /* Spacing from the image */
 }
 
 .mentorName {
     font-size: 18px;
-    /* Slightly larger name */
     font-weight: bold;
-    /* Bold for emphasis */
 }
 
 .mentorLocation {
@@ -235,6 +195,7 @@
     margin-bottom: 20px;
     /* Space below */
     transition: color 0.3s;
+    /* Smooth transition */
 }
 
 .backButton:hover {
@@ -252,7 +213,6 @@
 
 .browseButton {
     background-color: #007bff;
-    /* Primary button color */
     color: white;
     /* White text color */
     padding: 10px 20px;
@@ -377,52 +337,35 @@
     border-radius: 12px;
     /* Rounded corners for hero section */
     position: relative;
-    /* For positioning decorative elements */
     overflow: hidden;
-    /* Ensure content doesn't overflow */
 }
 
 .heroSection h1 {
     font-size: 2.5em;
-    /* Larger font size for the main heading */
     margin-bottom: 20px;
-    /* Spacing below the heading */
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    /* Subtle shadow for better readability */
 }
 
 .heroSection p {
     font-size: 1.2em;
-    /* Slightly larger font size for description */
     margin-bottom: 30px;
-    /* Spacing below the paragraph */
     color: #f7f7f7;
-    /* Light color for description text */
 }
 
 .heroButton {
     background-color: #4CAF50;
-    /* Vibrant green for buttons */
     color: #fff;
-    /* White text on buttons */
     padding: 15px 30px;
-    /* Button padding */
     border: none;
-    /* Remove default border */
     border-radius: 5px;
-    /* Rounded corners for buttons */
     cursor: pointer;
-    /* Pointer cursor on hover */
     transition: background-color 0.3s;
-    /* Smooth transition */
 }
 
 .heroButton:hover {
     background-color: #45a049;
-    /* Darker green on hover */
 }
 
-/* Optional decorative elements */
 .heroSection::before {
     content: '';
     position: absolute;
@@ -431,8 +374,119 @@
     right: 0;
     height: 100%;
     background: rgba(255, 255, 255, 0.1);
-    /* Light overlay for depth */
     border-radius: 12px;
     z-index: 1;
-    /* Place behind the text */
+}
+
+.chatButton {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.chatButton:hover {
+    background-color: #0056b3;
+}
+
+.fullPageChat {
+    position: relative;
+    width: calc(100% - 250px);
+    /* Ensure it takes up the remaining space after the sidebar */
+    height: 90%;
+    /* Adjust height */
+    background-color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* Optional shadow */
+    border-radius: 8px;
+    z-index: 1000;
+}
+
+/* Chat Box */
+.chatBox {
+    position: absolute;
+    bottom: 80px;
+    right: 20px;
+    width: 500px;
+    max-height: 800px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.chatHeader {
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.chatContent {
+    flex-grow: 1;
+    padding: 10px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.aiMessage,
+.userMessage {
+    padding: 8px 10px;
+    border-radius: 10px;
+    max-width: 80%;
+}
+
+.aiMessage {
+    background-color: #e0e0e0;
+    align-self: flex-start;
+}
+
+.userMessage {
+    background-color: #007bff;
+    color: white;
+    align-self: flex-end;
+}
+
+.chatInputContainer {
+    display: flex;
+    padding: 8px;
+    border-top: 1px solid #ddd;
+}
+
+.chatInput {
+    flex: 1;
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    outline: none;
+}
+
+.sendButton {
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.buttonContainer {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
 }

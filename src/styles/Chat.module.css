@@ -1,7 +1,7 @@
 .chatContainer {
     display: flex;
     flex-direction: column;
-    height: 700px;
+    height: 100vh;
     padding: 16px;
     background-color: #f0f0f0;
 }
@@ -27,22 +27,23 @@
     display: inline-block;
 }
 
-/* Sender's messages (left aligned) */
 .senderBubble {
     background-color: #d1f1ff;
-    align-self: flex-start;
-    /* Align to the left */
-    color: #004085;
-    border-top-left-radius: 0;
-}
-
-/* Receiver's messages (right aligned) */
-.receiverBubble {
-    background-color: #e5e5ea;
     align-self: flex-end;
     /* Align to the right */
-    color: #333;
+    color: #004085;
     border-top-right-radius: 0;
+    /* Adjust border to match the corner style */
+}
+
+/* Receiver's messages (left aligned) */
+.receiverBubble {
+    background-color: #e5e5ea;
+    align-self: flex-start;
+    /* Align to the left */
+    color: #333;
+    border-top-left-radius: 0;
+    /* Adjust border to match the corner style */
 }
 
 /* Input container styling */
@@ -50,6 +51,12 @@
     display: flex;
     gap: 8px;
     padding: 8px 0;
+    border-top: 1px solid #ccc;
+    /* Optional: add border to separate messages and input */
+    background-color: #f0f0f0;
+    flex-shrink: 0;
+    position: sticky;
+    bottom: 0;
 }
 
 .input {
@@ -72,4 +79,46 @@
 
 .sendButton:hover {
     background-color: #0056b3;
+}
+
+.chatHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px;
+    background-color: #e5effa;
+    font-size: 16px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    color: #333;
+    position: sticky;
+    /* Makes the header sticky */
+    top: 0;
+    /* Positions the header at the top */
+    z-index: 10;
+    /* Ensures the header stays above other elements */
+    flex-shrink: 0;
+}
+
+.chatHeader h3 {
+    flex-grow: 1;
+    text-align: center;
+    margin: 0;
+    color: #007bff;
+}
+
+.backButton {
+    font-size: 16px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: #007bff;
+    padding: 10px;
+    transition: color 0.3s;
+    margin-right: auto;
+}
+
+.backButton:hover {
+    color: #0056b3;
+    /* Darker shade on hover */
 }

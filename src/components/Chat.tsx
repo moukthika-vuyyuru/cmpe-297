@@ -7,11 +7,13 @@ import SockJS from "sockjs-client";
 
 
 interface ChatProps {
-  recipientId: string; // Define recipientId as a required prop
+  recipientId: string;
+  recipientName: string;
+  onBack: () => void; // New prop to handle back button click
 }
 
-const Chat: React.FC<ChatProps> = ({ recipientId }) => {
-  const { userId: contextUserId } = useUserContext(); // From logged-in user context
+const Chat: React.FC<ChatProps> = ({ recipientId, recipientName, onBack }) => {
+  const { userId: contextUserId } = useUserContext();
   const senderId = contextUserId || localStorage.getItem("userId");
 
   const [messages, setMessages] = useState<
@@ -79,6 +81,12 @@ const Chat: React.FC<ChatProps> = ({ recipientId }) => {
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      sendMessage();
+    }
+  };
+
   if (!isValidChat) {
     return (
       <div className={styles.chatContainer}>
@@ -91,6 +99,13 @@ const Chat: React.FC<ChatProps> = ({ recipientId }) => {
 
   return (
     <div className={styles.chatContainer}>
+      {/* Chat Header with Back Button */}
+      <div className={styles.chatHeader}>
+        <button onClick={onBack} className={styles.backButton}>
+          ← Back
+        </button>
+        <h3>{recipientName}</h3>
+      </div>
       <div className={styles.messages}>
         {messages.map((msg, index) => (
           <div
@@ -111,6 +126,7 @@ const Chat: React.FC<ChatProps> = ({ recipientId }) => {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
           placeholder="Type your message..."
           className={styles.input}
         />
