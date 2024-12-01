@@ -25,7 +25,7 @@ const MentorDashboard: React.FC = () => {
   const [selectedMenteeId, setSelectedMenteeId] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch(`http://localhost:8080/mentees`)
+    fetch(`${APIURL}/mentees`)
       .then((res) => res.json())
       .then((data) => {
         const menteeData = data.reduce(
@@ -57,20 +57,20 @@ const MentorDashboard: React.FC = () => {
 
   useEffect(() => {
     fetch(
-      `http://localhost:8080/followRequests?mentorId=${userId}&status=pending`
+      `${APIURL}/followRequests?mentorId=${userId}&status=pending`
     )
       .then((res) => res.json())
       .then((data) => setFollowRequests(data))
       .catch((err) => console.error("Failed to load follow requests", err));
 
-    fetch(`http://localhost:8080/follows?mentorId=${userId}`)
+    fetch(`${APIURL}/follows?mentorId=${userId}`)
       .then((res) => res.json())
       .then((data) => setFollows(data))
       .catch((err) => console.error("Failed to load follows", err));
   }, [userId]);
 
   const handleAccept = (requestId: string, menteeId: string) => {
-    fetch(`http://localhost:8080/followRequests/${requestId}`, {
+    fetch(`${APIURL}/followRequests/${requestId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status: "accepted" }),
@@ -90,7 +90,7 @@ const MentorDashboard: React.FC = () => {
 
           setFollows((prev) => [...prev, newFollow]);
 
-          return fetch(`http://localhost:8080/follows`, {
+          return fetch(`${APIURL}/follows`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newFollow),
@@ -103,7 +103,7 @@ const MentorDashboard: React.FC = () => {
   };
 
   const handleReject = (requestId: string) => {
-    fetch(`http://localhost:8080/followRequests/${requestId}`, {
+    fetch(`${APIURL}/followRequests/${requestId}`, {
       method: "DELETE",
     })
       .then((res) => {
@@ -214,7 +214,7 @@ const MentorDashboard: React.FC = () => {
               <div key={request.id} className={styles.requestCard}>
                 <img
                   className={styles.menteeProfilePicture}
-                  src={`http://localhost:8080/mentees/${request.menteeId}/picture`}
+                  src={`${APIURL}/mentees/${request.menteeId}/picture`}
                   alt="Mentee"
                   onError={(e) => (e.currentTarget.src = defaultAvatar)}
                 />

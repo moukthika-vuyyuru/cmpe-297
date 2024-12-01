@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import styles from "../styles/Register.module.css";
+import { APIURL } from "../Utilities/Apiurl";
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ const Register: React.FC = () => {
       };
 
       // Save the user
-      await fetch("http://localhost:8080/users", {
+      await fetch(APIURL+"/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userData),
@@ -64,7 +65,7 @@ const Register: React.FC = () => {
           company: formData.company,
         };
 
-        await fetch("http://localhost:8080/mentors", {
+        await fetch(APIURL+"/mentors", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(mentorData),
@@ -76,7 +77,7 @@ const Register: React.FC = () => {
           companyOrUniversity: formData.companyOrUniversity,
         };
 
-        await fetch("http://localhost:8080/mentees", {
+        await fetch(APIURL+"/mentees", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(menteeData),
