@@ -10,7 +10,7 @@ import {APIURL} from "../Utilities/Apiurl"; // Import the API URL if needed
 const defaultAvatar = "https://mentorapplication.s3.us-west-2.amazonaws.com/default-avatar.jpeg";
 
 const MentorDashboard: React.FC = () => {
-  const { userId, name: mentorName } = useUserContext();
+  const { userId } = useUserContext();
   const [activeTab, setActiveTab] = useState<
     "mentees" | "requests" | "profile"
   >("mentees");
@@ -22,7 +22,18 @@ const MentorDashboard: React.FC = () => {
       { name: string; location: string; companyOrUniversity: string }
     >
   >({});
+  const [mentorName, setMentorName] = useState<string>("");
   const [selectedMenteeId, setSelectedMenteeId] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Fetch mentor details
+    fetch(`$A/mentors/${userId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setMentorName(data.name);
+      })
+      .catch((err) => console.error("Failed to load mentor data", err));
+  }, [userId]);
 
   useEffect(() => {
     fetch(`http://localhost:8080/mentees`)
