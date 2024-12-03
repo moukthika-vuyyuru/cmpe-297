@@ -38,6 +38,7 @@
     padding: 15px;
     color: white;
     transition: transform 0.2s;
+    cursor: pointer;
 }
 
 .profileCard:hover {
@@ -112,6 +113,7 @@
     width: calc(25% - 20px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s;
+    cursor: pointer;
 }
 
 .mentorCard:hover {
@@ -271,6 +273,7 @@
     /* Subtle shadow */
     transition: transform 0.2s;
     /* Animation for hover effect */
+    cursor: pointer;
 }
 
 .recommendedMentorCard:hover {
