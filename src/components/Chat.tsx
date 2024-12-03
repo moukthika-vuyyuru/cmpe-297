@@ -64,6 +64,25 @@ const Chat: React.FC<ChatProps> = ({ recipientId, recipientName, onBack }) => {
     };
   }, [senderId, recipientId, isValidChat]);
   
+  useEffect(() => {
+    const fetchHistory = async () => {
+        if (!isValidChat) return;
+        try {
+            const response = await axios.get(`${APIURL}/messages`, {
+                params: {
+                    senderId: senderId,
+                    receiverId: recipientId
+                }
+            });
+            setMessages(response.data || []);
+        } catch (error) {
+            console.error("Failed to fetch chat history:", error);
+        }
+    };
+
+    fetchHistory();
+}, [senderId, recipientId, isValidChat]); // Dependency array to ensure updates on sender or recipient change
+
 
   const sendMessage = async () => {
     if (!input.trim() || !isValidChat) return;
