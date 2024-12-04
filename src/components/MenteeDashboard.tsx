@@ -12,11 +12,10 @@ import "react-toastify/dist/ReactToastify.css";
 import MentorCard from "./MentorCard";
 import { Mentor } from "../types";
 import MentorProfileModal from "./MentorProfileModal";
-import {APIURL} from "../Utilities/Apiurl";
+import { APIURL } from "../Utilities/Apiurl";
 
-
-const defaultAvatar = "https://mentorapplication.s3.us-west-2.amazonaws.com/default-avatar.jpeg";
-
+const defaultAvatar =
+  "https://mentorapplication.s3.us-west-2.amazonaws.com/default-avatar.jpeg";
 
 const MenteeDashboard: React.FC = () => {
   const { userId: menteeId, name: menteeName } = useUserContext();
@@ -59,9 +58,7 @@ const MenteeDashboard: React.FC = () => {
     if (!menteeId) return;
 
     try {
-      const res = await fetch(
-        `${APIURL}/followRequests?menteeId=${menteeId}`
-      );
+      const res = await fetch(`${APIURL}/followRequests?menteeId=${menteeId}`);
       const data: FollowRequest[] = await res.json();
       setPendingRequests(data);
     } catch (err) {
@@ -139,12 +136,9 @@ const MenteeDashboard: React.FC = () => {
 
   const cancelFollowRequest = async (requestId: string) => {
     try {
-      const res = await fetch(
-        `${APIURL}/followRequests/${requestId}`,
-        {
-          method: "DELETE",
-        }
-      );
+      const res = await fetch(`${APIURL}/followRequests/${requestId}`, {
+        method: "DELETE",
+      });
 
       if (!res.ok) throw new Error("Failed to cancel follow request.");
 
@@ -169,21 +163,20 @@ const MenteeDashboard: React.FC = () => {
     setInputText("");
 
     try {
-      // const response = await fetch(
-      //   "https://payload.vextapp.com/hook//catch/channel_token",
-      //   {
-      //     method: "POST",
-      //     headers: {
-      //       Apikey: "Api-Key .",
-      //       Accept: "application/json",
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: JSON.stringify({ payload: inputText }),
-      //   }
-      // );
+      const response = await fetch(
+        "https://payload.vextapp.com/hook/Q901YZS69F/catch/channel_token",
+        {
+          method: "POST",
+          headers: {
+            Apikey: "Api-Key ack7RSK4.x9U5TmNdT5eZDzqtDmbTDck8cjhbykQf",
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ payload: inputText }),
+        }
+      );
 
-      // const responseData = await response.json();
-      const responseData = { text: "Python" }; // Mock response for testing
+      const responseData = await response.json();
       setMessages((prev) => [
         ...prev,
         {
