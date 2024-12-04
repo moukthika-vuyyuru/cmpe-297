@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import styles from "../styles/UserProfile.module.css";
 import { useUserContext } from "./UserContext";
-import defaultAvatar from "../assets/default-avatar.jpeg";
+import { APIURL } from "../Utilities/Apiurl";
 
 interface UserProfileData {
   profilePicture: string;
@@ -12,6 +12,8 @@ interface UserProfileData {
   skills: string;
   bio: string;
 }
+
+const defaultAvatar = "https://mentorapplication.s3.us-west-2.amazonaws.com/default-avatar.jpeg";
 
 const UserProfile: React.FC = () => {
   const { userId } = useUserContext(); // Get logged-in user's ID
@@ -26,7 +28,7 @@ const UserProfile: React.FC = () => {
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const res = await fetch(`http://localhost:5001/mentees/${userId}`);
+        const res = await fetch(`${APIURL}/mentees/${userId}`);
         if (!res.ok) throw new Error("Failed to fetch user details");
         const data: UserProfileData = await res.json();
         setUserProfile(data);
@@ -73,7 +75,7 @@ const UserProfile: React.FC = () => {
       };
 
       try {
-        const res = await fetch(`http://localhost:5001/mentees/${userId}`, {
+        const res = await fetch(`${APIURL}/mentees/${userId}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(updatedProfile),

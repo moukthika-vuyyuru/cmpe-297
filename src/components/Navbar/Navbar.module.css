@@ -25,15 +25,22 @@
 .leftSection {
   display: flex;
   align-items: center;
+  justify-content: flex-start;
+  /* Align items to the left */
+  flex-grow: 1;
+  /* Ensure leftSection takes up all available space */
 }
 
 .leftSection>* {
   margin-right: 15px;
+  /* Add spacing between the elements */
 }
 
 .rightSection {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
+  /* Align items to the right */
 }
 
 .rightSection>* {

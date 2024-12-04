@@ -2,6 +2,11 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useUserContext } from "./UserContext";
 import styles from "../styles/Chat.module.css";
+import { Client } from "@stomp/stompjs";
+import SockJS from "sockjs-client";
+import {APIURL} from "../Utilities/Apiurl";
+
+
 
 interface ChatProps {
   recipientId: string;
@@ -28,23 +33,56 @@ const Chat: React.FC<ChatProps> = ({ recipientId, recipientName, onBack }) => {
 
   useEffect(() => {
     if (!isValidChat) return;
-
-    const fetchMessages = async () => {
-      try {
-        const response = await axios.get(`http://localhost:5001/messages`);
-        const filteredMessages = response.data.filter(
-          (msg: { senderId: string; receiverId: string }) =>
-            (msg.senderId === senderId && msg.receiverId === recipientId) ||
-            (msg.senderId === recipientId && msg.receiverId === senderId)
-        );
-        setMessages(filteredMessages);
-      } catch (error) {
-        console.error("Failed to fetch messages:", error);
-      }
+  
+    const stompClient = new Client({
+      webSocketFactory: () => new SockJS(APIURL+"/server"),
+      debug: (str) => console.log(str),
+      onConnect: () => {
+        console.log("Connected to WebSocket");
+  
+        stompClient.subscribe("/topic/return", (message) => {
+          const receivedMessage = JSON.parse(message.body);
+          if (
+            (receivedMessage.senderId === senderId &&
+              receivedMessage.receiverId === recipientId) ||
+            (receivedMessage.senderId === recipientId &&
+              receivedMessage.receiverId === senderId)
+          ) {
+            setMessages((prev) => [...prev, receivedMessage]);
+          }
+        });
+      },
+      onStompError: (error) => {
+        console.error("WebSocket error:", error);
+      },
+    });
+  
+    stompClient.activate();
+  
+    return () => {
+      stompClient.deactivate();
+    };
+  }, [senderId, recipientId, isValidChat]);
+  
+  useEffect(() => {
+    const fetchHistory = async () => {
+        if (!isValidChat) return;
+        try {
+            const response = await axios.get(`${APIURL}/messages`, {
+                params: {
+                    senderId: senderId,
+                    receiverId: recipientId
+                }
+            });
+            setMessages(response.data || []);
+        } catch (error) {
+            console.error("Failed to fetch chat history:", error);
+        }
     };
 
-    fetchMessages();
-  }, [senderId, recipientId, isValidChat]);
+    fetchHistory();
+}, [senderId, recipientId, isValidChat]); // Dependency array to ensure updates on sender or recipient change
+
 
   const sendMessage = async () => {
     if (!input.trim() || !isValidChat) return;
@@ -57,8 +95,7 @@ const Chat: React.FC<ChatProps> = ({ recipientId, recipientName, onBack }) => {
     };
 
     try {
-      await axios.post("http://localhost:5001/messages", newMessage);
-      setMessages((prev) => [...prev, newMessage]);
+      await axios.post(APIURL+"/messages", newMessage);
       setInput("");
     } catch (error) {
       console.error("Failed to send message:", error);

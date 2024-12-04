@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styles from "./Hero.module.css";
-import heroImage from "../../assets/hero-image.png";
 
+const heroImage = "https://mentorapplication.s3.us-west-2.amazonaws.com/hero-image.png";
 const Hero: React.FC = () => {
   return (
     <section className={styles.hero_section}>
