@@ -1,11 +1,10 @@
 .dashboardContainer {
     display: flex;
-    padding: 20px;
+    flex-direction: row;
+    height: 90vh;
+    overflow: hidden;
     background-color: #f9f9f9;
-    /* Light background for contrast */
-    min-height: 100vh;
     font-family: 'Arial', sans-serif;
-    /* Set a clean font */
 }
 
 .sidebar {
@@ -191,15 +190,6 @@
     margin-right: 20px;
 }
 
-.chatContainer {
-    flex: 1;
-    width: 75%;
-    padding: 20px;
-    border-left: 1px solid #ccc;
-    background-color: #ecf0f1;
-
-}
-
 .menteeList {
     display: flex;
     flex-direction: column;
@@ -219,6 +209,7 @@
     transition: transform 0.2s;
     /* Animation for hover effect */
     max-width: 300px;
+    cursor: pointer;
 }
 
 .menteeImage {

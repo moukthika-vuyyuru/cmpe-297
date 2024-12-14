@@ -3,7 +3,6 @@ import { useUserContext } from "./UserContext";
 import { useNavigate } from "react-router-dom";
 import styles from "../styles/MenteeDashboard.module.css";
 import { FollowRequest } from "../types";
-import defaultAvatar from "../assets/default-avatar.jpeg";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import Chat from "./Chat";
 import UserProfile from "./UserProfile";
@@ -13,6 +12,10 @@ import "react-toastify/dist/ReactToastify.css";
 import MentorCard from "./MentorCard";
 import { Mentor } from "../types";
 import MentorProfileModal from "./MentorProfileModal";
+import { APIURL } from "../Utilities/Apiurl";
+
+const defaultAvatar =
+  "https://mentorapplication.s3.us-west-2.amazonaws.com/default-avatar.jpeg";
 
 const MenteeDashboard: React.FC = () => {
   const { userId: menteeId, name: menteeName } = useUserContext();
@@ -39,7 +42,7 @@ const MenteeDashboard: React.FC = () => {
   useEffect(() => {
     const fetchMentors = async () => {
       try {
-        const res = await fetch(`http://localhost:5001/mentors`);
+        const res = await fetch(`${APIURL}/mentors`);
         const data = await res.json();
         setMentors(data);
       } catch (err) {
@@ -55,9 +58,7 @@ const MenteeDashboard: React.FC = () => {
     if (!menteeId) return;
 
     try {
-      const res = await fetch(
-        `http://localhost:5001/followRequests?menteeId=${menteeId}`
-      );
+      const res = await fetch(`${APIURL}/followRequests?menteeId=${menteeId}`);
       const data: FollowRequest[] = await res.json();
       setPendingRequests(data);
     } catch (err) {
@@ -97,7 +98,7 @@ const MenteeDashboard: React.FC = () => {
     if (!selectedMentorForRequest || !menteeId) return;
 
     try {
-      const res = await fetch(`http://localhost:5001/followRequests`, {
+      const res = await fetch(`${APIURL}/followRequests`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -135,12 +136,9 @@ const MenteeDashboard: React.FC = () => {
 
   const cancelFollowRequest = async (requestId: string) => {
     try {
-      const res = await fetch(
-        `http://localhost:5001/followRequests/${requestId}`,
-        {
-          method: "DELETE",
-        }
-      );
+      const res = await fetch(`${APIURL}/followRequests/${requestId}`, {
+        method: "DELETE",
+      });
 
       if (!res.ok) throw new Error("Failed to cancel follow request.");
 
@@ -165,21 +163,21 @@ const MenteeDashboard: React.FC = () => {
     setInputText("");
 
     try {
-      // const response = await fetch(
-      //   "https://payload.vextapp.com/hook//catch/channel_token",
-      //   {
-      //     method: "POST",
-      //     headers: {
-      //       Apikey: "Api-Key .",
-      //       Accept: "application/json",
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: JSON.stringify({ payload: inputText }),
-      //   }
-      // );
+      console.log("inputText" + inputText);
+      const response = await fetch(
+        "https://payload.vextapp.com/hook/Q901YZS69F/catch/channel_token",
+        {
+          method: "POST",
+          headers: {
+            Apikey: "Api-Key 5PoICA0E.n4rq79Kg2vYF5sIiBtR00QMiZymGn3Ky",
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ payload: inputText }),
+        }
+      );
 
-      // const responseData = await response.json();
-      const responseData = { text: "Python" }; // Mock response for testing
+      const responseData = await response.json();
       setMessages((prev) => [
         ...prev,
         {
@@ -198,25 +196,37 @@ const MenteeDashboard: React.FC = () => {
     }
   };
   const formatAiResponse = (response: any) => {
-    console.log(response);
-
     if (!response || !response.text || typeof response.text !== "string") {
       return "No valid response received.";
     }
-    //const text = response.text;
-    const text =
-      "\n\nBased on the mentor dataset, I recommend the following mentors who have experience in Python:\n\n1. **Bob Smith**\n\t* Skills: Python, Data Science, Machine Learning\n\t* Specialty: Data Science\n\t* Designation: Data Scientist\n\t* Company: Amazon\n\t* Location: San Francisco, CA, USA\n\nBob Smith is a Data Scientist at Amazon with expertise in Python, Data Science, and Machine Learning. He is a strong match for anyone looking for guidance in Python and related fields.\n\nPlease note that the dataset does not provide explicit information on the mentors' years of experience. However, based on their designations and companies, it can be inferred that they have significant experience in their respective fields.\n\nIf you would like to filter the results based on specific years of experience or location, please let me know, and I'll do my best to provide a more tailored recommendation.";
 
-    const formattedText = text
+    // Apply basic formatting to response.text
+    return response.text
       .replace(/\n\n/g, "<br><br>") // Double line breaks for paragraphs
       .replace(/\n/g, "<br>") // Single line breaks
-      .replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;") // Tabs as indentation
-      .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>") // Bold text with **
-      .replace(/\*([^*]+)\*/g, "<strong>$1</strong>") // Bold text with *
-      .replace(/(^|\n)\s*\*\s+/g, "<br>");
-
-    return `<p>${formattedText}</p>`;
+      .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>"); // Bold text
   };
+
+  // const formatAiResponse = (response: any) => {
+  //   console.log(response);
+
+  //   if (!response || !response.text || typeof response.text !== "string") {
+  //     return "No valid response received.";
+  //   }
+  //   //const text = response.text;
+  //   const text =
+  //     "\n\nBased on the mentor dataset, I recommend the following mentors who have experience in Python:\n\n1. **Bob Smith**\n\t* Skills: Python, Data Science, Machine Learning\n\t* Specialty: Data Science\n\t* Designation: Data Scientist\n\t* Company: Amazon\n\t* Location: San Francisco, CA, USA\n\nBob Smith is a Data Scientist at Amazon with expertise in Python, Data Science, and Machine Learning. He is a strong match for anyone looking for guidance in Python and related fields.\n\nPlease note that the dataset does not provide explicit information on the mentors' years of experience. However, based on their designations and companies, it can be inferred that they have significant experience in their respective fields.\n\nIf you would like to filter the results based on specific years of experience or location, please let me know, and I'll do my best to provide a more tailored recommendation.";
+
+  //   const formattedText = text
+  //     .replace(/\n\n/g, "<br><br>") // Double line breaks for paragraphs
+  //     .replace(/\n/g, "<br>") // Single line breaks
+  //     .replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;") // Tabs as indentation
+  //     .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>") // Bold text with **
+  //     .replace(/\*([^*]+)\*/g, "<strong>$1</strong>") // Bold text with *
+  //     .replace(/(^|\n)\s*\*\s+/g, "<br>");
+
+  //   return `<p>${formattedText}</p>`;
+  // };
 
   const handleMentorSelect = (mentor: Mentor) => {
     if (selectedMentor && selectedMentor.id === mentor.id) {

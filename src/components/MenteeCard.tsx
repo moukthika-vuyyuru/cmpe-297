@@ -1,13 +1,13 @@
 // src/components/MenteeCard.tsx
 import React, { useState } from "react";
 import styles from "../styles/MenteeCard.module.css"; // Import your CSS module
-import defaultAvatar from "../assets/default-avatar.jpeg";
-
 interface Mentee {
   id: string;
   name: string;
   image: string;
 }
+
+const defaultAvatar = "https://mentorapplication.s3.us-west-2.amazonaws.com/default-avatar.jpeg";
 
 const MenteeCard: React.FC<{
   mentee: Mentee;

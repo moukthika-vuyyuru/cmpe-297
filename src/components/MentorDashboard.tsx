@@ -2,13 +2,16 @@ import React, { useEffect, useState } from "react";
 import styles from "../styles/MentorDashboard.module.css";
 import MentorProfile from "./MentorProfile";
 import { useUserContext } from "./UserContext";
-import { FollowRequest } from "../types"; // Ensure this type is defined correctly
-import defaultAvatar from "../assets/default-avatar.jpeg";
-import Chat from "./Chat"; // Ensure you are using this component correctly if needed
-import { FaMapMarkerAlt } from "react-icons/fa"; // Import the map icon if needed
+import { FollowRequest } from "../types";
+import Chat from "./Chat";
+import { FaMapMarkerAlt } from "react-icons/fa";
+import { APIURL } from "../Utilities/Apiurl";
+
+const defaultAvatar =
+  "https://mentorapplication.s3.us-west-2.amazonaws.com/default-avatar.jpeg";
 
 const MentorDashboard: React.FC = () => {
-  const { userId } = useUserContext();
+  const { userId, name: mentorName } = useUserContext();
   const [activeTab, setActiveTab] = useState<
     "mentees" | "requests" | "profile"
   >("mentees");
@@ -20,21 +23,11 @@ const MentorDashboard: React.FC = () => {
       { name: string; location: string; companyOrUniversity: string }
     >
   >({});
-  const [mentorName, setMentorName] = useState<string>("");
   const [selectedMenteeId, setSelectedMenteeId] = useState<string | null>(null);
 
   useEffect(() => {
-    // Fetch mentor details
-    fetch(`http://localhost:5001/mentors/${userId}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setMentorName(data.name);
-      })
-      .catch((err) => console.error("Failed to load mentor data", err));
-  }, [userId]);
-
-  useEffect(() => {
-    fetch(`http://localhost:5001/mentees`)
+    // Fetch mentees only once on mount
+    fetch(`${APIURL}/mentees`)
       .then((res) => res.json())
       .then((data) => {
         const menteeData = data.reduce(
@@ -65,41 +58,41 @@ const MentorDashboard: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    fetch(
-      `http://localhost:5001/followRequests?mentorId=${userId}&status=pending`
-    )
-      .then((res) => res.json())
-      .then((data) => setFollowRequests(data))
-      .catch((err) => console.error("Failed to load follow requests", err));
+    if (userId) {
+      // Fetch follow requests and follows only when userId is available
+      fetch(`${APIURL}/followRequests?mentorId=${userId}&status=pending`)
+        .then((res) => res.json())
+        .then((data) => setFollowRequests(data))
+        .catch((err) => console.error("Failed to load follow requests", err));
 
-    fetch(`http://localhost:5001/follows?mentorId=${userId}`)
-      .then((res) => res.json())
-      .then((data) => setFollows(data))
-      .catch((err) => console.error("Failed to load follows", err));
+      fetch(`${APIURL}/follows?mentorId=${userId}`)
+        .then((res) => res.json())
+        .then((data) => setFollows(data))
+        .catch((err) => console.error("Failed to load follows", err));
+    }
   }, [userId]);
 
   const handleAccept = (requestId: string, menteeId: string) => {
-    fetch(`http://localhost:5001/followRequests/${requestId}`, {
+    fetch(`${APIURL}/followRequests/${requestId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status: "accepted" }),
     })
       .then((res) => {
         if (res.ok) {
-          alert("Request accepted!");
+          // Update UI immediately
           setFollowRequests((prev) =>
             prev.filter((req) => req.id !== requestId)
           );
-
           const newFollow = {
             id: `${userId}-${menteeId}`,
             menteeId,
             mentorId: userId,
           };
-
           setFollows((prev) => [...prev, newFollow]);
 
-          return fetch(`http://localhost:5001/follows`, {
+          // Persist new follow to server
+          return fetch(`${APIURL}/follows`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(newFollow),
@@ -112,12 +105,11 @@ const MentorDashboard: React.FC = () => {
   };
 
   const handleReject = (requestId: string) => {
-    fetch(`http://localhost:5001/followRequests/${requestId}`, {
+    fetch(`${APIURL}/followRequests/${requestId}`, {
       method: "DELETE",
     })
       .then((res) => {
         if (res.ok) {
-          alert("Request rejected!");
           setFollowRequests((prev) =>
             prev.filter((req) => req.id !== requestId)
           );
@@ -142,7 +134,7 @@ const MentorDashboard: React.FC = () => {
         <div className={styles.profileCard}>
           <img
             className={styles.profilePicture}
-            src="path/to/profile/picture" // Replace with the actual profile picture source
+            src="path/to/profile/picture"
             alt="Default Avatar"
             onError={(e) => (e.currentTarget.src = defaultAvatar)}
           />
@@ -190,23 +182,19 @@ const MentorDashboard: React.FC = () => {
                 >
                   <img
                     src={mentee.image || defaultAvatar}
-                    alt={menteeMap[mentee.menteeId]?.name || "Unknown Mentee"} // Access name from the updated menteeMap
+                    alt={menteeMap[mentee.menteeId]?.name || "Unknown Mentee"}
                     className={styles.menteeImage}
                   />
                   <div className={styles.menteeDetails}>
-                    <h3>{menteeMap[mentee.menteeId]?.name || "Loading..."}</h3>{" "}
-                    {/* Access name */}
+                    <h3>{menteeMap[mentee.menteeId]?.name || "Loading..."}</h3>
                     <p>
-                      {menteeMap[mentee.menteeId]?.companyOrUniversity ||
-                        "University not specified"}{" "}
-                      {/* Access university */}
+                      {menteeMap[mentee.menteeId]?.companyOrUniversity || "N/A"}
                     </p>
                     <div className={styles.menteeLocation}>
                       <FaMapMarkerAlt />
                       <span>
                         {menteeMap[mentee.menteeId]?.location ||
-                          "Location not specified"}{" "}
-                        {/* Access location */}
+                          "Not specified"}
                       </span>
                     </div>
                   </div>
@@ -217,13 +205,12 @@ const MentorDashboard: React.FC = () => {
             )}
           </div>
         ) : activeTab === "requests" ? (
-          // Inside the `requests` tab rendering
           <div className={styles.requestsContainer}>
             {followRequests.map((request) => (
               <div key={request.id} className={styles.requestCard}>
                 <img
                   className={styles.menteeProfilePicture}
-                  src={`http://localhost:5001/mentees/${request.menteeId}/picture`}
+                  src={`${APIURL}/mentees/${request.menteeId}/picture`}
                   alt="Mentee"
                   onError={(e) => (e.currentTarget.src = defaultAvatar)}
                 />
@@ -237,8 +224,7 @@ const MentorDashboard: React.FC = () => {
                   <div className={styles.location}>
                     <FaMapMarkerAlt className={styles.icon} />
                     <span>
-                      {menteeMap[request.menteeId]?.location ||
-                        "Location not specified"}
+                      {menteeMap[request.menteeId]?.location || "Not specified"}
                     </span>
                   </div>
                   <p className={styles.requestMessage}>

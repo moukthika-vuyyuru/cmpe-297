@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import styles from "../styles/BrowseMentors.module.css";
-import defaultAvatar from "../assets/default-avatar.jpeg";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import FollowRequestModal from "./FollowRequestModal";
 import { useUserContext } from "./UserContext"; // Import the hook
@@ -8,6 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import MentorProfileModal from "./MentorProfileModal";
 import { Mentor } from "../types";
+import { APIURL } from "../Utilities/Apiurl";
 
 // Define an interface for FollowRequest
 interface FollowRequest {
@@ -24,13 +24,14 @@ const BrowseMentors: React.FC = () => {
   const [pendingRequests, setPendingRequests] = useState<FollowRequest[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [showModal, setShowModal] = useState(false);
+  const [showFollowRequestModal, setShowFollowRequestModal] = useState(false); // State for showing follow request modal
   const [selectedMentor, setSelectedMentor] = useState<Mentor | null>(null);
   const { userId } = useUserContext();
 
   useEffect(() => {
     const fetchMentors = async () => {
       try {
-        const res = await fetch(`http://localhost:5001/mentors`);
+        const res = await fetch(`${APIURL}/mentors`);
         const data = await res.json();
         setMentors(data);
       } catch (err) {
@@ -44,9 +45,7 @@ const BrowseMentors: React.FC = () => {
   // Fetch followed mentor IDs
   const fetchFollowedMentors = async () => {
     try {
-      const res = await fetch(
-        `http://localhost:5001/followRequests?menteeId=${userId}`
-      );
+      const res = await fetch(`${APIURL}/followRequests?menteeId=${userId}`);
       const data: FollowRequest[] = await res.json();
       setFollowedMentorIds(
         data
@@ -61,9 +60,7 @@ const BrowseMentors: React.FC = () => {
   // Fetch pending requests
   const fetchPendingRequests = async () => {
     try {
-      const res = await fetch(
-        `http://localhost:5001/followRequests?menteeId=${userId}`
-      );
+      const res = await fetch(`${APIURL}/followRequests?menteeId=${userId}`);
       const data: FollowRequest[] = await res.json();
       setPendingRequests(
         data.filter((request) => request.status === "pending")
@@ -96,14 +93,19 @@ const BrowseMentors: React.FC = () => {
       return;
     }
     setSelectedMentor(mentor);
-    setShowModal(true);
+    setShowModal(true); // Open MentorProfileModal
+  };
+
+  const handleFollowRequest = () => {
+    setShowModal(false); // Close MentorProfileModal
+    setShowFollowRequestModal(true); // Open FollowRequestModal
   };
 
   const sendFollowRequest = async (message: string) => {
     if (!selectedMentor) return;
 
     try {
-      const res = await fetch(`http://localhost:5001/followRequests`, {
+      const res = await fetch(`${APIURL}/followRequests`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -119,7 +121,7 @@ const BrowseMentors: React.FC = () => {
       if (!res.ok) throw new Error("Failed to send follow request.");
 
       toast.success("Follow request sent successfully!");
-      setShowModal(false);
+      setShowFollowRequestModal(false);
       setSelectedMentor(null);
 
       // Fetch updated mentors to reflect the new follow request
@@ -134,12 +136,9 @@ const BrowseMentors: React.FC = () => {
   // New function to cancel a follow request
   const cancelFollowRequest = async (requestId: string) => {
     try {
-      const res = await fetch(
-        `http://localhost:5001/followRequests/${requestId}`,
-        {
-          method: "DELETE",
-        }
-      );
+      const res = await fetch(`${APIURL}/followRequests/${requestId}`, {
+        method: "DELETE",
+      });
 
       if (!res.ok) throw new Error("Failed to cancel follow request.");
 
@@ -183,7 +182,10 @@ const BrowseMentors: React.FC = () => {
                 onClick={() => handleMentorCardClick(mentor)}
               >
                 <img
-                  src={mentor.image || defaultAvatar}
+                  src={
+                    mentor.image ||
+                    "https://mentorapplication.s3.us-west-2.amazonaws.com/default-avatar.jpeg"
+                  }
                   alt={mentor.name}
                   className={styles.mentorImage}
                 />
@@ -226,7 +228,16 @@ const BrowseMentors: React.FC = () => {
         <MentorProfileModal
           mentor={selectedMentor}
           onClose={() => setShowModal(false)}
-          onFollow={() => handleFollow(selectedMentor)}
+          onFollow={handleFollowRequest} // Show FollowRequestModal when follow button is clicked
+        />
+      )}
+
+      {/* Follow Request Modal */}
+      {showFollowRequestModal && selectedMentor && (
+        <FollowRequestModal
+          mentorName={selectedMentor.name}
+          onSend={sendFollowRequest}
+          onClose={() => setShowFollowRequestModal(false)}
         />
       )}
     </div>
